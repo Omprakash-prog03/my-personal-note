@@ -136,7 +136,11 @@ jobs:
               body = "JVM unit tests did not produce results - the build probably failed first."
               try:
                   log_text = open('test.log', errors='replace').read().splitlines()
-                  body += "\n\n```\n" + "\n".join(log_text[-80:])[-20000:] + "\n```"
+                  picked = [l for l in log_text if 'error:' in l or 'FAILED' in l or 'Exception' in l
+                            or 'Caused by' in l or 'What went wrong' in l or '.java:' in l]
+                  if not picked:
+                      picked = log_text[-60:]
+                  body += "\n\n```\n" + "\n".join(picked)[-20000:] + "\n```"
               except OSError:
                   pass
           else:
