@@ -31,6 +31,7 @@ import com.nuzhat.app.canvas.commands.LayerOrderCommand;
 import com.nuzhat.app.canvas.commands.PropertyCommand;
 import com.nuzhat.app.canvas.engine.CanvasDocument;
 import com.nuzhat.app.canvas.engine.CanvasView;
+import com.nuzhat.app.data.entity.ActivityEntity;
 import com.nuzhat.app.data.entity.MediaEntity;
 import com.nuzhat.app.domain.model.BackgroundStyle;
 import com.nuzhat.app.domain.model.CanvasElement;
@@ -39,6 +40,7 @@ import com.nuzhat.app.domain.model.elements.AudioElement;
 import com.nuzhat.app.domain.model.elements.DocumentElement;
 import com.nuzhat.app.domain.model.elements.DrawElement;
 import com.nuzhat.app.domain.model.elements.EnvelopeElement;
+import com.nuzhat.app.domain.model.elements.DrawElement;
 import com.nuzhat.app.domain.model.elements.ImageElement;
 import com.nuzhat.app.domain.model.elements.LinkElement;
 import com.nuzhat.app.domain.model.elements.ShapeElement;
@@ -187,7 +189,8 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
                     app.repo().mediaOnce(mediaId, media -> {
                         if (media == null) return;
                         ImageElement element = imageElementFor(media);
-                        addElement(element, getString(R.string.image_added));
+                        addElement(element, getString(R.string.image_added),
+                                ActivityEntity.PHOTO_CAPTURED);
                     });
                 });
     }
@@ -583,6 +586,15 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
     }
 
     private void addElement(CanvasElement element, String message) {
+        addElement(element, message, null);
+    }
+
+    /**
+     * @param activityType explicit action for the history, or null to derive it from the element.
+     *                     The camera passes PHOTO_CAPTURED so the timeline can tell a capture from a
+     *                     picked image.
+     */
+    private void addElement(CanvasElement element, String message, String activityType) {
         CanvasDocument document = canvasView.document();
         if (document == null) return;
         if (element.width <= 0) element.width = element.defaultWidth();
@@ -597,6 +609,7 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         updateContextToolbar();
         updateHint();
         viewModel.scheduleSave();
+        recordElementAdded(element, activityType);
         if (message != null) UiUtils.snack(canvasView, message);
     }
 
@@ -866,6 +879,27 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         });
     }
 
+    /** One history entry per object placed on the page; the recorder collapses rapid repeats. */
+    private void recordElementAdded(CanvasElement element, String activityType) {
+        CanvasDocument document = canvasView.document();
+        String type = activityType;
+        if (type == null) {
+            if (element instanceof ImageElement) {
+                type = ActivityEntity.MEDIA_IMPORTED;
+            } else if (element instanceof DrawElement) {
+                type = ActivityEntity.DRAWING_ADDED;
+            } else {
+                type = ActivityEntity.OBJECT_ADDED;
+            }
+        }
+        String what = ActivityEntity.PHOTO_CAPTURED.equals(type) ? "Photo captured"
+                : element.label() + " added";
+        String title = document == null ? null : document.title;
+        app.repo().activity().record(type,
+                title == null || title.isEmpty() ? what : what + " to \"" + title + "\"",
+                null, pageId, element == null ? null : element.id);
+    }
+
     private void exportPage(PageExporter.Settings exportSettings) {
         final CanvasDocument document = canvasView.document();
         if (document == null) return;
@@ -876,6 +910,9 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         app.executor().execute(() -> {
             try {
                 File file = PageExporter.exportPage(app.files(), document, palette, exportSettings, density);
+                app.repo().activity().record(ActivityEntity.PAGE_EXPORTED,
+                        "Exported \"" + document.title + "\" as " + exportSettings.format,
+                        null, pageId, null);
                 runOnUiThread(() -> showExported(file));
             } catch (Exception e) {
                 runOnUiThread(() -> UiUtils.snack(canvasView,
@@ -905,6 +942,8 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         app.executor().execute(() -> {
             try {
                 File file = PageExporter.exportPage(app.files(), document, palette, exportSettings, density);
+                app.repo().activity().record(ActivityEntity.PAGE_EXPORTED,
+                        "Shared \"" + document.title + "\" as an image", null, pageId, null);
                 runOnUiThread(() -> shareFile(file));
             } catch (Exception e) {
                 runOnUiThread(() -> UiUtils.snack(canvasView,

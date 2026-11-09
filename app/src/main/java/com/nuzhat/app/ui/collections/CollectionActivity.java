@@ -325,6 +325,11 @@ public class CollectionActivity extends BaseActivity {
             try {
                 File file = PageExporter.exportCollectionPdf(app.files(), documents, palette,
                         exportSettings, density);
+                app.repo().activity().record(com.nuzhat.app.data.entity.ActivityEntity.COLLECTION_EXPORTED,
+                        "Exported " + documents.size() + (documents.size() == 1 ? " page from " : " pages from ")
+                                + "\"" + (collection != null ? collection.name : "collection")
+                                + "\" as a PDF",
+                        collection != null ? collection.id : null, null, null);
                 runOnUiThread(() -> UiUtils.snack(recycler,
                         getString(R.string.collection_export_done, file.getName())));
             } catch (Exception e) {
