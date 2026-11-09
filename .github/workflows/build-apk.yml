@@ -116,6 +116,7 @@ jobs:
           python3 - <<'PY'
           import glob, json, re, xml.etree.ElementTree as ET
           total = failures = errors = skipped = 0
+          details = []
           suites = []
           for path in glob.glob('app/build/test-results/testDebugUnitTest/*.xml'):
               root = ET.parse(path).getroot()
@@ -124,6 +125,11 @@ jobs:
               errors += int(root.get('errors', 0))
               skipped += int(root.get('skipped', 0))
               suites.append(root.get('name', path))
+              for case in root.iter('testcase'):
+                  for bad in list(case.findall('failure')) + list(case.findall('error')):
+                      text = (bad.get('message') or '') + '\n' + (bad.text or '')
+                      frames = [l for l in text.splitlines() if l.strip()][:40]
+                      details.append(case.get('name') + ':\n' + '\n'.join(frames))
           if total == 0:
               body = "JVM unit tests did not produce results - the build probably failed first."
           else:
@@ -136,12 +142,8 @@ jobs:
                   log = open('test.log', errors='replace').read()
               except OSError:
                   pass
-              if verdict == "FAILED":
-                  interesting = [l for l in log.splitlines()
-                                 if 'FAILED' in l or 'error:' in l or 'AssertionError' in l
-                                 or 'expected' in l.lower() or 'Exception' in l or 'Caused by' in l
-                                 or 'at com.archive' in l]
-                  body += "\n\n```\n" + "\n".join(interesting[:120])[-20000:] + "\n```"
+              if verdict == "FAILED" and details:
+                  body += "\n\n```\n" + "\n\n".join(details)[:45000] + "\n```"
           json.dump({"body": body}, open('/tmp/tests.json', 'w'))
           PY
           gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/tests.json || true

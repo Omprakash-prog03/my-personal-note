@@ -25,6 +25,9 @@ public class StartupSmokeTest {
 
     @Test
     public void loginScreenInflates() {
+        // A previous test may have left a persisted session behind; the login screen only stays up
+        // when nobody is signed in.
+        new AuthStore(RuntimeEnvironment.getApplication()).signOut();
         ActivityController<LoginActivity> controller = Robolectric.buildActivity(LoginActivity.class).setup();
         LoginActivity activity = controller.get();
         assertFalse("login screen finished during creation", activity.isFinishing());
