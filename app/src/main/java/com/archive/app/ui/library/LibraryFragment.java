@@ -44,14 +44,31 @@ import java.util.List;
 /** Library hub: collections, journal, research and the personal reference shelf. */
 public class LibraryFragment extends Fragment {
 
+    private androidx.viewpager2.widget.ViewPager2 pager;
+    private int pendingSection = -1;
+
+    /** Called by the hosting activity when Home sends the user to a specific section. */
+    public void selectSection(int index) {
+        int clamped = Math.max(0, Math.min(3, index));
+        if (pager != null) {
+            pager.setCurrentItem(clamped, false);
+        } else {
+            pendingSection = clamped;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_library, container, false);
         TabLayout tabs = root.findViewById(R.id.tabs);
-        ViewPager2 pager = root.findViewById(R.id.pager);
+        pager = root.findViewById(R.id.pager);
         pager.setAdapter(new TabsAdapter(this));
+        if (pendingSection >= 0) {
+            pager.setCurrentItem(pendingSection, false);
+            pendingSection = -1;
+        }
         new TabLayoutMediator(tabs, pager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText(R.string.library_tab_collections); break;

@@ -161,6 +161,33 @@ def broken_imports():
     return findings
 
 
+LIBRARY_VIEW_PREFIXES = ('android.', 'androidx.', 'com.google.', 'java.', 'kotlin.')
+
+
+def missing_custom_views():
+    """A layout that names a view class which does not exist crashes with InflateException."""
+    defined = {}
+    for path in glob.glob(os.path.join(APP_SRC, '**', '*.java'), recursive=True):
+        text = open(path, errors='replace').read()
+        m = re.search(r'^\s*package\s+([\w.]+)\s*;', text, re.M)
+        pkg = m.group(1) if m else ''
+        defined[pkg + '.' + os.path.basename(path)[:-5]] = path
+
+    findings = []
+    for path in glob.glob(os.path.join(RES, 'layout*', '*.xml')):
+        try:
+            tree = ET.parse(path)
+        except ET.ParseError:
+            continue
+        for node in tree.iter():
+            tag = node.tag if isinstance(node.tag, str) else ''
+            if '.' not in tag or tag.startswith(LIBRARY_VIEW_PREFIXES):
+                continue
+            if tag not in defined:
+                findings.append((os.path.relpath(path, ROOT), tag))
+    return sorted(set(findings))
+
+
 def layout_ids():
     ids = set()
     for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
@@ -266,6 +293,10 @@ def check():
 
     for path, fqn in broken_imports():
         print('ERROR: %s imports %s, which does not exist' % (path, fqn))
+        problems += 1
+
+    for path, tag in missing_custom_views():
+        print('ERROR: %s references view class %s, which does not exist' % (path, tag))
         problems += 1
 
     print('problems:', problems)

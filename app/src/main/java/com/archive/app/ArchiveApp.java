@@ -38,6 +38,8 @@ public class ArchiveApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // Installed before the database opens, so even a broken first launch leaves a readable trace.
+        com.archive.app.utils.CrashLog.install(this);
         instance = this;
         executor = Executors.newFixedThreadPool(4);
         mainHandler = new Handler(Looper.getMainLooper());
