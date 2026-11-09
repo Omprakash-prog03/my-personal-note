@@ -101,6 +101,17 @@ public class StartupSmokeTest {
         assertFalse("collection screen finished during creation",
                 collectionController.get().isFinishing());
 
+        // Probe the same repository path the canvas uses before blaming the activity.
+        final java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(1);
+        final com.nuzhat.app.data.repository.CanvasRepository.LoadedPage[] probe =
+                new com.nuzhat.app.data.repository.CanvasRepository.LoadedPage[1];
+        NuzhatApp.self().canvasRepo().load(ids[1], loaded -> {
+            probe[0] = loaded;
+            latch.countDown();
+        });
+        assertTrue("repository never answered the canvas load", latch.await(5, java.util.concurrent.TimeUnit.SECONDS));
+        assertNotNull("canvas repository could not read the page it was given", probe[0].page);
+
         Intent canvasIntent = new Intent(app, CanvasActivity.class)
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
