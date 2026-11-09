@@ -124,9 +124,20 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         viewModel = new ViewModelProvider(this).get(CanvasViewModel.class);
         viewModel.load(pageId);
         viewModel.document().observe(this, this::onDocumentLoaded);
-        viewModel.saveState().observe(this, state -> toolbar.setSubtitle(
-                state != null && state == CanvasViewModel.STATE_SAVING
-                        ? getString(R.string.canvas_saving) : getString(R.string.canvas_saved)));
+        viewModel.saveState().observe(this, state -> {
+            if (state == null) return;
+            if (state == CanvasViewModel.STATE_FAILED) {
+                toolbar.setSubtitle(getString(R.string.canvas_save_failed));
+                com.google.android.material.snackbar.Snackbar.make(canvasView,
+                        R.string.canvas_save_failed,
+                        com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry, v -> viewModel.saveNow())
+                        .show();
+                return;
+            }
+            toolbar.setSubtitle(state == CanvasViewModel.STATE_SAVING
+                    ? getString(R.string.canvas_saving) : getString(R.string.canvas_saved));
+        });
         viewModel.pageMissing().observe(this, missing -> {
             if (missing != null && missing) {
                 UiUtils.toast(this, getString(R.string.generic_error, "page missing"));

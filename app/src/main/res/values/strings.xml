@@ -542,4 +542,6 @@
     <string name="template_research">Research notes</string>
     <string name="template_quote">Quote card</string>
     <string name="template_index">Index page</string>
+
+    <string name="canvas_save_failed">Unable to save — Retry</string>
 </resources>

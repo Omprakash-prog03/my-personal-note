@@ -179,8 +179,9 @@ device pass.
    tree-sitter syntax pass plus full resource-reference checks (`tools/check_sources.py`, 0
    problems across 107 Java files (3 test classes) and 115 XML files). Expect to fix ordinary compile issues on the
    first Gradle build.
-2. `CanvasViewModel.save()` clears its dirty flags before the write callback, so a failed database
-   write is not retried automatically (the recovery snapshot still exists, so no work is lost).
+2. Autosave now distinguishes success from failure: a failed batch keeps the affected changes dirty,
+   shows "Unable to save — Retry", and retries after two seconds. That retry path is statically
+   verified but not exercised on a device.
 3. Restore intentionally restarts the process; that path is untested on-device.
 4. Instrumented tests exist (`app/src/androidTest`): Room persistence, cascade delete, soft-delete
    filtering, transactions, canvas hydration/grouping/snapshot undo, and export rendering. They need

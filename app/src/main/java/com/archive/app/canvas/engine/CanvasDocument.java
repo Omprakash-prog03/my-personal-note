@@ -153,6 +153,25 @@ public class CanvasDocument {
         backgroundDirty = false;
     }
 
+    /**
+     * Clears only the changes a completed write actually persisted. An object edited while the write
+     * was in flight has a newer {@code updatedAt} and stays dirty, so its next save is not lost.
+     */
+    public void clearDirty(java.util.Set<String> savedUpserts, java.util.List<String> savedDeletes,
+                           boolean backgroundSaved, long savedAt) {
+        if (savedUpserts != null) {
+            java.util.Iterator<String> iterator = dirtyIds.iterator();
+            while (iterator.hasNext()) {
+                String id = iterator.next();
+                if (!savedUpserts.contains(id)) continue;
+                CanvasElement element = byId(id);
+                if (element == null || element.updatedAt <= savedAt) iterator.remove();
+            }
+        }
+        if (savedDeletes != null) deletedIds.removeAll(savedDeletes);
+        if (backgroundSaved) backgroundDirty = false;
+    }
+
     public boolean hasPendingChanges() {
         return !dirtyIds.isEmpty() || !deletedIds.isEmpty() || backgroundDirty;
     }

@@ -29,6 +29,9 @@ public class CanvasViewModel extends AndroidViewModel {
 
     public static final int STATE_SAVED = 0;
     public static final int STATE_SAVING = 1;
+    public static final int STATE_FAILED = 2;
+
+    private static final long RETRY_DELAY_MS = 2000L;
 
     private final CanvasRepository repo;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -126,13 +129,25 @@ public class CanvasViewModel extends AndroidViewModel {
         boolean backgroundDirty = doc.isBackgroundDirty();
         if (upserts.isEmpty() && deletes.isEmpty() && !backgroundDirty) return;
 
-        doc.clearDirty();
         saveState.setValue(STATE_SAVING);
         PageEntity page = doc.toPageEntity();
-        long stamp = System.currentTimeMillis();
+        final long stamp = System.currentTimeMillis();
         doc.pageId = page.id;
 
-        repo.save(doc.pageId, stamp, upserts, deletes, () -> saveState.setValue(STATE_SAVED));
+        final java.util.Set<String> savedIds = new java.util.HashSet<>();
+        for (CanvasElementEntity entity : upserts) savedIds.add(entity.id);
+
+        repo.save(doc.pageId, stamp, upserts, deletes,
+                () -> {
+                    // Only drop the changes this write persisted; anything edited meanwhile stays dirty.
+                    doc.clearDirty(savedIds, deletes, backgroundDirty, stamp);
+                    saveState.setValue(STATE_SAVED);
+                },
+                () -> {
+                    saveState.setValue(STATE_FAILED);
+                    handler.removeCallbacks(saveTask);
+                    handler.postDelayed(saveTask, RETRY_DELAY_MS);
+                });
         repo.savePage(page, null);
         repo.writeRecovery(doc.pageId, doc.toRecoveryJson());
     }

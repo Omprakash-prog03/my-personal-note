@@ -134,6 +134,29 @@ public class CanvasDocumentTest {
     }
 
     @Test
+    public void completedWriteClearsOnlyPersistedChanges() {
+        PageEntity page = page();
+        CanvasDocument document = CanvasDocument.fromPage(page, new ArrayList<>());
+        TextElement element = new TextElement();
+        element.setText("first");
+        document.add(element);
+        document.markDirty(element);
+
+        long stamp = element.updatedAt;
+        java.util.Set<String> saved = new java.util.HashSet<>();
+        saved.add(element.id);
+
+        // An edit that lands after the write started must survive the clear.
+        element.updatedAt = stamp + 5;
+
+        document.clearDirty(saved, new ArrayList<>(), false, stamp);
+        assertTrue(document.dirtyIds().contains(element.id));
+
+        document.clearDirty(saved, new ArrayList<>(), false, element.updatedAt);
+        assertFalse(document.dirtyIds().contains(element.id));
+    }
+
+    @Test
     public void duplicateKeepsGeometryButGetsNewId() {
         CanvasElementEntity entity = textEntity(Ids.newId(), 4, "copy me");
         CanvasElement element = com.archive.app.domain.model.ElementFactory.fromEntity(entity);
