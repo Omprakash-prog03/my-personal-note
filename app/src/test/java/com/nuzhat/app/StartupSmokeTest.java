@@ -88,12 +88,16 @@ public class StartupSmokeTest {
         com.nuzhat.app.canvas.engine.CanvasView canvasView =
                 canvasController.get().findViewById(R.id.canvas_view);
         long deadline = System.currentTimeMillis() + 5000;
-        while (canvasView.document() == null && System.currentTimeMillis() < deadline) {
+        while (canvasView.document() == null && System.currentTimeMillis() < deadline
+                && !canvasController.get().isFinishing()) {
             org.robolectric.shadows.ShadowLooper.idleMainLooper();
             Thread.sleep(10);
         }
+        if (canvasController.get().isFinishing()) {
+            throw new AssertionError("canvas quit while loading (toast="
+                    + org.robolectric.shadows.ShadowToast.getTextOfLatestToast() + ")");
+        }
         assertNotNull("canvas never received its document", canvasView.document());
-        assertFalse("canvas closed after loading its page", canvasController.get().isFinishing());
     }
 
     private static void awaitWithLooper(java.util.concurrent.CountDownLatch latch) throws Exception {
