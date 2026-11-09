@@ -40,10 +40,15 @@ archive is the user's data.
 | Check | Where | Result |
 |---|---|---|
 | `assembleDebug` (APK builds and is signed) | GitHub Actions, every push | ✅ passes |
-| `testDebugUnitTest` | GitHub Actions, every push | ✅ 17 tests, 3 classes, 0 failures |
+| `testDebugUnitTest` | GitHub Actions, every push | ✅ 21 tests, 4 classes, 0 failures |
 | `tools/check_sources.py` (syntax, resources, a11y) | local, no SDK needed | ✅ 0 problems |
 | `connectedDebugAndroidTest` (23 instrumented tests) | needs a device | ⏳ not run yet |
 | §26 acceptance walkthrough on hardware | manual | ⏳ not run yet |
+
+`StartupSmokeTest` is the reason the app launches at all: it drives Robolectric to inflate the login
+screen, all four tabs, a real collection and a real canvas. Two launch crashes (a layout naming a
+`HomeBackdropView` in the wrong package, and `MainActivity` not implementing `HomeFragment.Host`) were
+found this way — neither was visible to the compiler or to `aapt`.
 
 CI publishes the APK it just built to
 [the `apk-latest` release](https://github.com/Omprakash-prog03/my-personal-note/releases/tag/apk-latest),
@@ -212,7 +217,10 @@ device pass.
    soft-delete filtering, transactions, canvas hydration/grouping/undo, image crop maths and export
    rendering. CI compiles them (`compileDebugAndroidTestJavaWithJavac`) so they stay syntactically
    valid, but they only *run* on a device via `connectedDebugAndroidTest`, which has not happened.
-5. Password recovery is impossible by design (local-only account). Back up before changing
+5. If the app dies unexpectedly, the stack trace is saved privately and shown on the next launch with
+   a **Copy details** button — that is how a crash on a phone without `adb` can still be reported.
+
+6. Password recovery is impossible by design (local-only account). Back up before changing
    credentials.
 
 ---

@@ -310,3 +310,27 @@ described images stay distinguishable as layouts change.
 | Canvas | hydration, grouping, snapshot undo, layer order, per-object dirty clearing | `androidTest/.../CanvasDocumentTest` |
 | Crop | clamping, crossing edges, aspect from source pixels, invalid source guard | `androidTest/.../ImageElementCropTest` |
 | Export | aspect, background include/exclude, 4096 cap, painted pixels | `androidTest/.../PageExporterTest` |
+
+## 17. Launch safety
+
+Two crashers shipped in the first installable APK, both invisible to `javac` and `aapt`:
+
+1. `fragment_home.xml` named `com.archive.app.ui.home.HomeBackdropView`; the class lives in
+   `ui.common`. aapt does not resolve custom view class names, so the failure only appeared when the
+   view was inflated (`InflateException` → `ClassNotFoundException`).
+2. `MainActivity` implemented `CreateSheet.Host` but not `HomeFragment.Host`, while
+   `HomeFragment` casts `requireActivity()` to it (`ClassCastException` on the first frame).
+
+Both were found by `app/src/test/.../StartupSmokeTest`, which runs under Robolectric with
+`unitTests.includeAndroidResources = true` and therefore inflates the real theme and layouts. It
+covers the login screen, all four tabs, and a collection + canvas opened from a Room fixture, so the
+whole "tap the icon and see something" path is executed on every push. `returnDefaultValues` stays on
+for the plain JVM tests, but it is exactly why those could never catch this.
+
+`tools/check_sources.py` gained a rule for the first bug: a layout tag that names a class which does
+not exist in the source tree now fails the check.
+
+`utils/CrashLog` installs an uncaught-exception handler in `ArchiveApp.onCreate`, before Room opens,
+and writes the trace to app-private storage. `LoginActivity` shows the previous trace with **Copy
+details** on the next launch, so a crash on a phone without `adb` is still reportable. The file never
+leaves the device unless the user copies it.
