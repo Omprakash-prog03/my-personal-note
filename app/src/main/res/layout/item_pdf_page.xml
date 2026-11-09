@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="14dp">
+
+    <ImageView
+        android:id="@+id/pdf_page_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/pdf_loading"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/pdf_page_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:textAppearance="@style/TextAppearance.Archive.Label"
+        android:textColor="?attr/archiveMuted" />
+</LinearLayout>

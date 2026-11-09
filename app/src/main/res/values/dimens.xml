@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_xxs">2dp</dimen>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">12dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+    <dimen name="radius_s">8dp</dimen>
+    <dimen name="radius_m">14dp</dimen>
+    <dimen name="radius_l">20dp</dimen>
+    <dimen name="radius_xl">28dp</dimen>
+    <dimen name="touch_target">48dp</dimen>
+    <dimen name="icon_s">18dp</dimen>
+    <dimen name="icon_m">22dp</dimen>
+    <dimen name="icon_l">28dp</dimen>
+    <dimen name="collection_cover_height">132dp</dimen>
+    <dimen name="page_thumb_height">168dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="canvas_handle_radius">11dp</dimen>
+    <dimen name="sheet_peek">72dp</dimen>
+</resources>

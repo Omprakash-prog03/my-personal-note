@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:implementationMode="performance" />
+
+    <ImageView
+        android:id="@+id/review_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/camera_use"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/close_camera"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/close"
+        android:src="@drawable/ic_close"
+        app:tint="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/capture_progress"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_scrim_bottom"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <ImageButton
+            android:id="@+id/flash_button"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/camera_flash"
+            android:src="@drawable/ic_flash"
+            app:tint="@color/white" />
+
+        <ImageButton
+            android:id="@+id/capture_button"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/bg_swatch"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/camera_capture"
+            android:scaleType="center"
+            android:src="@drawable/ic_camera"
+            app:tint="@color/black" />
+
+        <ImageButton
+            android:id="@+id/flip_button"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/camera_flip"
+            android:src="@drawable/ic_flip_camera"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/review_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_scrim_bottom"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingBottom="32dp"
+        android:visibility="gone">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/retake_button"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/camera_retake"
+            android:textColor="@color/white"
+            app:strokeColor="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/use_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/camera_use"
+            app:icon="@drawable/ic_check" />
+    </LinearLayout>
+</FrameLayout>

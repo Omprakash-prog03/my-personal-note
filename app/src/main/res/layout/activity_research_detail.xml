@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:menu="@menu/menu_research"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/research_project"
+        app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <EditText
+                android:id="@+id/project_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fontFamily="serif"
+                android:hint="@string/research_project"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted"
+                android:textSize="24sp" />
+
+            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="18dp"
+                android:text="@string/research_description" />
+
+            <EditText
+                android:id="@+id/project_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/research_description"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minHeight="52dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted" />
+
+            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:text="@string/research_questions" />
+
+            <EditText
+                android:id="@+id/project_questions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/research_questions"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minHeight="52dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted" />
+
+            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:text="@string/research_hypothesis" />
+
+            <EditText
+                android:id="@+id/project_hypothesis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/research_hypothesis"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minHeight="52dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted" />
+
+            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:text="@string/research_findings" />
+
+            <EditText
+                android:id="@+id/project_findings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/research_findings"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minHeight="52dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted" />
+
+            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:text="@string/research_conclusion" />
+
+            <EditText
+                android:id="@+id/project_conclusion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/research_conclusion"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minHeight="52dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.Archive.SectionLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/research_references" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_reference"
+                    style="@style/Widget.Archive.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/research_add_reference"
+                    app:icon="@drawable/ic_add" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/references_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/references_empty"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/archiveMuted" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/references_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/reference_note_local"
+                android:textAppearance="@style/TextAppearance.Archive.Label"
+                android:textColor="?attr/archiveMuted" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

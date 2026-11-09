@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARCHIVE</string>
+    <string name="app_tagline">A personal museum of everything worth keeping.</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Still awake</string>
+    <string name="home_intro">What will you preserve today?</string>
+    <string name="home_search_hint">Search the archive…</string>
+    <string name="section_pinned">Pinned</string>
+    <string name="section_continue">Continue working</string>
+    <string name="section_collections">Collections</string>
+    <string name="section_journal">Latest journal entry</string>
+    <string name="section_recent_media">Recently imported</string>
+    <string name="see_all">See all</string>
+    <string name="new_collection">New collection</string>
+    <string name="new_page">New page</string>
+    <string name="no_collections_yet">Your archive is empty. Start with a collection.</string>
+    <string name="no_pages_yet">No pages in this collection yet.</string>
+    <string name="no_journal_yet">No journal entries yet. Write the first one.</string>
+    <string name="no_media_yet">Imported images will appear here.</string>
+    <string name="pages_count">%1$d pages</string>
+    <string name="open_journal">Open journal</string>
+
+    <!-- Create -->
+    <string name="create_title">Create something</string>
+    <string name="create_collection">Collection</string>
+    <string name="create_collection_desc">A folder for a subject, a memory, an obsession.</string>
+    <string name="create_page">Scrapbook page</string>
+    <string name="create_page_desc">A freeform canvas with objects you can arrange.</string>
+    <string name="create_journal">Journal entry</string>
+    <string name="create_journal_desc">Daily writing, no template required.</string>
+    <string name="create_research">Research project</string>
+    <string name="create_research_desc">Questions, references, findings, conclusions.</string>
+    <string name="create_reference">Library reference</string>
+    <string name="create_reference_desc">A book, film, article, song or quote.</string>
+    <string name="create_import">Import media</string>
+    <string name="create_import_desc">Bring photographs or files into the archive.</string>
+
+    <!-- Collections -->
+    <string name="collection_default_name">Untitled collection</string>
+    <string name="collection_name">Name</string>
+    <string name="collection_description">Description</string>
+    <string name="collection_colour">Cover colour</string>
+    <string name="collection_icon">Icon</string>
+    <string name="rename">Rename</string>
+    <string name="duplicate">Duplicate</string>
+    <string name="change_cover">Change cover</string>
+    <string name="favourite">Favourite</string>
+    <string name="unfavourite">Remove favourite</string>
+    <string name="pin">Pin to home</string>
+    <string name="unpin">Unpin</string>
+    <string name="delete">Delete</string>
+    <string name="delete_collection_title">Move to trash?</string>
+    <string name="delete_collection_body">“%1$s” and all of its pages will move to the trash. You can restore them later.</string>
+    <string name="delete_page_title">Move page to trash?</string>
+    <string name="delete_page_body">This page and its objects will move to the trash.</string>
+    <string name="move_to_trash">Move to trash</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_forever">Delete forever</string>
+    <string name="restore">Restore</string>
+    <string name="save">Save</string>
+    <string name="done">Done</string>
+    <string name="ok">OK</string>
+    <string name="close">Close</string>
+    <string name="untitled">Untitled</string>
+    <string name="untitled_page">Untitled page</string>
+    <string name="duplicate_suffix">copy</string>
+    <string name="collection_moved_to_trash">Collection moved to trash</string>
+    <string name="page_moved_to_trash">Page moved to trash</string>
+    <string name="restored">Restored</string>
+    <string name="nothing_here">Nothing here yet</string>
+
+    <!-- Pages -->
+    <string name="new_page_title">New page</string>
+    <string name="page_title">Page title</string>
+    <string name="page_format">Page format</string>
+    <string name="page_mode">Canvas mode</string>
+    <string name="mode_page">Fixed page</string>
+    <string name="mode_infinite">Infinite canvas</string>
+    <string name="page_format_a4_portrait">A4 portrait</string>
+    <string name="page_format_a4_landscape">A4 landscape</string>
+    <string name="page_format_square">Square</string>
+    <string name="page_format_journal">Portrait journal</string>
+    <string name="page_format_custom">Custom</string>
+    <string name="custom_width">Width</string>
+    <string name="custom_height">Height</string>
+
+    <!-- Canvas -->
+    <string name="canvas_saved">Saved</string>
+    <string name="recovery_title">Recover unsaved work?</string>
+    <string name="recovery_body">ARCHIVE found changes from a session that closed unexpectedly.</string>
+    <string name="restore_work">Recover</string>
+    <string name="discard">Discard</string>
+    <string name="playing_audio">Playing %1$s</string>
+    <string name="image_added">Image added</string>
+    <string name="document_added">Document attached</string>
+    <string name="canvas_saving">Saving…</string>
+    <string name="canvas_unsaved">Unsaved changes</string>
+    <string name="canvas_hint">Tap + to add your first object</string>
+    <string name="add">Add</string>
+    <string name="add_element">Add to page</string>
+    <string name="add_image">Photograph from gallery</string>
+    <string name="add_camera">Take a photograph</string>
+    <string name="add_document">Attach a document</string>
+    <string name="add_text">Text</string>
+    <string name="add_drawing">Drawing</string>
+    <string name="add_shape">Shape</string>
+    <string name="add_sticker">Sticker</string>
+    <string name="add_envelope">Envelope</string>
+    <string name="add_sticky">Sticky note</string>
+    <string name="add_link">Link card</string>
+    <string name="tool_select">Select</string>
+    <string name="tool_text">Text</string>
+    <string name="tool_image">Image</string>
+    <string name="tool_camera">Camera</string>
+    <string name="tool_file">Document</string>
+    <string name="tool_draw">Draw</string>
+    <string name="tool_shape">Shape</string>
+    <string name="tool_sticker">Sticker</string>
+    <string name="tool_envelope">Envelope</string>
+    <string name="tool_note">Note</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="layers">Layers</string>
+    <string name="background">Background</string>
+    <string name="export">Export</string>
+    <string name="share">Share</string>
+    <string name="properties">Properties</string>
+    <string name="bring_front">Bring to front</string>
+    <string name="send_back">Send to back</string>
+    <string name="move_forward">Move forward</string>
+    <string name="move_backward">Move backward</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
+    <string name="hide">Hide</string>
+    <string name="show">Show</string>
+    <string name="group">Group</string>
+    <string name="ungroup">Ungroup</string>
+    <string name="select_all">Select all</string>
+    <string name="duplicate_element">Duplicate</string>
+    <string name="element_hidden_locked">This object is locked or hidden. Unlock it to edit.</string>
+    <string name="multi_selected">%1$d objects selected</string>
+    <string name="one_selected">1 object selected</string>
+    <string name="page_options">Page options</string>
+    <string name="tags_label">Tags</string>
+    <string name="tags_hint">Separate tags with commas</string>
+    <string name="tags_saved">Tags saved</string>
+    <string name="clear_page">Clear page</string>
+    <string name="clear_page_confirm">Remove every object from this page? Undo can bring them back within this session.</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="zoom_fit">Fit page</string>
+    <string name="fit_screen">Fit to screen</string>
+    <string name="nothing_to_undo">Nothing to undo</string>
+    <string name="nothing_to_redo">Nothing to redo</string>
+    <string name="stroke_colour">Ink colour</string>
+    <string name="stroke_width">Ink width</string>
+    <string name="eraser">Eraser</string>
+    <string name="pen">Pen</string>
+    <string name="pencil">Pencil</string>
+    <string name="marker">Marker</string>
+    <string name="highlighter">Highlighter</string>
+    <string name="draw_mode">Drawing mode — swipe on the page</string>
+    <string name="opacity">Opacity</string>
+    <string name="rotation">Rotation</string>
+    <string name="shadow">Shadow</string>
+    <string name="image_frame">Frame style</string>
+    <string name="corner_radius">Corner radius</string>
+    <string name="border_width">Border width</string>
+    <string name="fill_colour">Fill colour</string>
+    <string name="outline_colour">Outline colour</string>
+    <string name="text_colour">Text colour</string>
+    <string name="highlight_colour">Highlight</string>
+    <string name="align_left">Align left</string>
+    <string name="align_center">Align centre</string>
+    <string name="align_right">Align right</string>
+    <string name="font_size">Size</string>
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+    <string name="underline">Underline</string>
+    <string name="edit_text">Edit text</string>
+    <string name="text_hint">Write something worth keeping…</string>
+    <string name="sticker_library">Sticker library</string>
+    <string name="shape_library">Shape library</string>
+    <string name="shape_rectangle">Rectangle</string>
+    <string name="shape_rounded">Rounded rectangle</string>
+    <string name="shape_ellipse">Ellipse</string>
+    <string name="shape_circle">Circle</string>
+    <string name="shape_triangle">Triangle</string>
+    <string name="shape_line">Line</string>
+    <string name="shape_arrow">Arrow</string>
+    <string name="shape_double_arrow">Double arrow</string>
+    <string name="shape_star">Star</string>
+    <string name="shape_burst">Burst</string>
+    <string name="background_library">Background</string>
+    <string name="bg_plain">Plain paper</string>
+    <string name="bg_grid">Graph paper</string>
+    <string name="bg_ruled">Ruled paper</string>
+    <string name="bg_dots">Dotted paper</string>
+    <string name="bg_vintage">Vintage paper</string>
+    <string name="bg_kraft">Kraft paper</string>
+    <string name="bg_gradient">Gradient</string>
+    <string name="bg_image">Custom image</string>
+    <string name="bg_charcoal">Charcoal</string>
+    <string name="choose_from_gallery">Choose image…</string>
+    <string name="envelope_title">Envelope</string>
+    <string name="envelope_label">Label</string>
+    <string name="envelope_message">Message inside</string>
+    <string name="envelope_colour">Envelope colour</string>
+    <string name="envelope_open">Open envelope</string>
+    <string name="envelope_sealed">Sealed</string>
+    <string name="envelope_attach_image">Attach image</string>
+    <string name="envelope_contents">Inside the envelope</string>
+    <string name="envelope_empty">This envelope is empty.</string>
+    <string name="sticky_text">Sticky note text</string>
+    <string name="link_url">URL</string>
+    <string name="link_title">Title</string>
+    <string name="link_note">Note</string>
+    <string name="open_link">Open link</string>
+    <string name="no_browser">No app can open this link</string>
+    <string name="document_missing">The original file is no longer available.</string>
+    <string name="document_pages">%1$d pages</string>
+    <string name="open_document">Open document</string>
+    <string name="pdf_loading">Rendering pages…</string>
+    <string name="pdf_page_of">Page %1$d of %2$d</string>
+
+    <!-- Export -->
+    <string name="export_page">Export page</string>
+    <string name="export_collection">Export collection</string>
+    <string name="export_settings">Export settings</string>
+    <string name="export_png">PNG</string>
+    <string name="export_jpeg">JPEG</string>
+    <string name="export_pdf">PDF</string>
+    <string name="export_resolution">Resolution</string>
+    <string name="res_1x">Screen</string>
+    <string name="res_2x">High</string>
+    <string name="res_3x">Print</string>
+    <string name="include_background">Include background</string>
+    <string name="file_name">File name</string>
+    <string name="export_done">Exported to %1$s</string>
+    <string name="export_failed">Export failed: %1$s</string>
+    <string name="export_working">Exporting…</string>
+    <string name="share_page">Share page</string>
+    <string name="share_via">Share via</string>
+    <string name="no_share_app">No app available to share this file</string>
+    <string name="export_no_pages">This collection has no pages to export.</string>
+    <string name="collection_export_done">Collection exported to %1$s</string>
+
+    <!-- Journal -->
+    <string name="journal_title">Journal</string>
+    <string name="journal_hint_title">Title (optional)</string>
+    <string name="journal_hint_body">What happened, what you noticed, what you think…</string>
+    <string name="journal_mood">Mood</string>
+    <string name="journal_new_entry">New entry</string>
+    <string name="journal_saved">Entry saved</string>
+    <string name="journal_empty">No entries yet. The first page is always the hardest.</string>
+    <string name="journal_today">Today</string>
+
+    <!-- Research -->
+    <string name="research_title">Research</string>
+    <string name="research_project">Research project</string>
+    <string name="research_description">Description</string>
+    <string name="research_questions">Questions</string>
+    <string name="research_hypothesis">Hypothesis</string>
+    <string name="research_findings">Findings</string>
+    <string name="research_conclusion">Personal conclusion</string>
+    <string name="research_references">References</string>
+    <string name="research_add_reference">Add reference</string>
+    <string name="research_empty">No research projects yet.</string>
+    <string name="research_new_project">New research project</string>
+    <string name="research_saved">Project saved</string>
+    <string name="reference_title">Title</string>
+    <string name="reference_author">Author / creator</string>
+    <string name="reference_publisher">Publisher</string>
+    <string name="reference_date">Publication date</string>
+    <string name="reference_url">Source URL</string>
+    <string name="reference_notes">Notes</string>
+    <string name="reference_type">Type</string>
+    <string name="reference_collected">Collected %1$s</string>
+    <string name="references_empty">No references yet.</string>
+    <string name="reference_note_local">Stored locally. Nothing here is verified by ARCHIVE.</string>
+
+    <!-- Library -->
+    <string name="library_title">Library</string>
+    <string name="tab_collections">Collections</string>
+    <string name="tab_journal">Journal</string>
+    <string name="tab_research">Research</string>
+    <string name="tab_references">References</string>
+    <string name="library_item_new">New reference</string>
+    <string name="library_type_book">Book</string>
+    <string name="library_type_movie">Film</string>
+    <string name="library_type_music">Music</string>
+    <string name="library_type_article">Article</string>
+    <string name="library_type_website">Website</string>
+    <string name="library_type_quote">Quote</string>
+    <string name="library_creator">Creator</string>
+    <string name="library_year">Year</string>
+    <string name="library_rating">Rating</string>
+    <string name="library_notes">Notes</string>
+    <string name="library_empty">Nothing saved yet.</string>
+    <string name="library_saved">Saved to library</string>
+    <string name="rating_5">★★★★★</string>
+
+    <!-- Search -->
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search everything in the archive</string>
+    <string name="search_all">All</string>
+    <string name="search_pages">Pages</string>
+    <string name="search_text">Text</string>
+    <string name="search_journal">Journal</string>
+    <string name="search_references">References</string>
+    <string name="search_empty">Type to search names, text, tags and references.</string>
+    <string name="search_no_results">No matches for “%1$s”.</string>
+    <string name="search_favourites_only">Favourites only</string>
+    <string name="result_collection">Collection</string>
+    <string name="result_page">Page</string>
+    <string name="result_text">Canvas text</string>
+    <string name="result_journal">Journal</string>
+    <string name="result_reference">Reference</string>
+    <string name="result_library">Library</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_warm">Warm Archive</string>
+    <string name="theme_minimal">Modern Minimal</string>
+    <string name="theme_dark">Dark Academic</string>
+    <string name="settings_accent">Accent colour</string>
+    <string name="accent_ochre">Ochre</string>
+    <string name="accent_indigo">Indigo</string>
+    <string name="accent_sage">Sage</string>
+    <string name="accent_clay">Clay</string>
+    <string name="accent_rose">Rose</string>
+    <string name="accent_slate">Slate</string>
+    <string name="settings_home_background">Home background</string>
+    <string name="home_bg_paper">Paper grain</string>
+    <string name="home_bg_plain">Plain</string>
+    <string name="home_bg_ruled">Ruled</string>
+    <string name="home_bg_dots">Dotted</string>
+    <string name="home_bg_gradient">Gradient</string>
+    <string name="settings_canvas">Canvas</string>
+    <string name="settings_default_format">Default page format</string>
+    <string name="settings_default_mode">Default canvas mode</string>
+    <string name="settings_snap">Snap objects to grid</string>
+    <string name="settings_grid">Show grid while editing</string>
+    <string name="settings_storage">Storage</string>
+    <string name="settings_usage">%1$s used by the archive</string>
+    <string name="settings_cache">Clear thumbnail cache</string>
+    <string name="settings_backup">Back up archive</string>
+    <string name="settings_restore">Restore from backup</string>
+    <string name="settings_trash">Trash</string>
+    <string name="settings_trash_desc">%1$d items waiting to be restored or removed</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_app_lock">Require biometric unlock</string>
+    <string name="settings_app_lock_desc">Everything stays on this device. No accounts, no cloud, no analytics.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_licenses">Open-source licenses</string>
+    <string name="settings_credits">Built as a local-first archive. Your media never leaves this device.</string>
+    <string name="cache_cleared">Thumbnail cache cleared</string>
+    <string name="backup_working">Backing up…</string>
+    <string name="backup_done">Backup saved: %1$s</string>
+    <string name="backup_empty">Nothing to back up yet</string>
+    <string name="restore_title">Restore archive?</string>
+    <string name="restore_body">This replaces the current archive with the selected backup. ARCHIVE will restart afterwards. Existing data will be lost.</string>
+    <string name="restore_done">Backup restored. Restarting…</string>
+    <string name="restore_invalid">That file is not a valid ARCHIVE backup.</string>
+    <string name="biometric_title">Unlock ARCHIVE</string>
+    <string name="biometric_subtitle">Your archive is private</string>
+    <string name="biometric_unavailable">Biometric unlock is not available on this device</string>
+    <string name="generic_error">Something went wrong: %1$s</string>
+    <string name="permission_camera">Camera permission is needed to capture photographs.</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="camera_unavailable">No camera available on this device</string>
+    <string name="camera_capture">Capture</string>
+    <string name="camera_retake">Retake</string>
+    <string name="camera_use">Use photograph</string>
+    <string name="camera_flash">Flash</string>
+    <string name="camera_flip">Switch camera</string>
+    <string name="camera_failed">Could not capture: %1$s</string>
+
+    <!-- Trash -->
+    <string name="trash_title">Trash</string>
+    <string name="trash_empty">The trash is empty.</string>
+    <string name="trash_restore_all">Restore all</string>
+    <string name="trash_empty_all">Empty trash</string>
+    <string name="trash_empty_confirm">Permanently delete everything in the trash? This cannot be undone.</string>
+    <string name="trash_item_collection">Collection</string>
+    <string name="trash_item_page">Page</string>
+    <string name="trash_item_journal">Journal entry</string>
+    <string name="trash_item_research">Research project</string>
+    <string name="trash_item_reference">Reference</string>
+    <string name="trash_item_library">Library item</string>
+    <string name="deleted_permanently">Deleted permanently</string>
+
+    <!-- Common -->
+    <string name="cd_canvas">Scrapbook canvas</string>
+    <string name="cd_collection_cover">Collection cover</string>
+    <string name="cd_page_thumbnail">Page thumbnail</string>
+    <string name="cd_add">Add</string>
+    <string name="cd_more">More actions</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_favourite">Favourite</string>
+    <string name="loading">Loading…</string>
+    <string name="saving">Saving…</string>
+    <string name="retry">Retry</string>
+    <string name="unsupported_file">Unsupported file type</string>
+    <string name="import_failed">Import failed: %1$s</string>
+    <string name="imported_count">%1$d items imported</string>
+    <string name="pick_collection">Which collection?</string>
+    <string name="choose_collection">Choose a collection</string>
+    <string name="no_collection_yet">Create a collection first.</string>
+    <string name="licenses_title">Open-source licenses</string>
+
+    <!-- Library / journal / research extras -->
+    <string name="library_tab_collections">Collections</string>
+    <string name="library_tab_journal">Journal</string>
+    <string name="library_tab_research">Research</string>
+    <string name="library_tab_references">References</string>
+    <string name="journal_untitled">Untitled entry</string>
+    <string name="research_untitled">Untitled project</string>
+    <string name="edit">Edit</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_needed">Camera access is needed to take a photo.</string>
+    <string name="camera_unavailable">No camera is available on this device.</string>
+    <string name="capture_failed">Could not take the photo. Please try again.</string>
+
+    <!-- PDF viewer -->
+    <string name="pdf_open_failed">Could not open this document: %1$s</string>
+    <string name="pdf_truncated">Showing the first 80 pages.</string>
+    <string name="pdf_page_of">Page %1$d of %2$d</string>
+
+    <!-- Search -->
+    <string name="search_empty_title">Your archive, searchable</string>
+    <string name="search_empty_body">Search collection names, canvas text, tags, journal entries and references. Everything stays on this device.</string>
+    <string name="page_unavailable">That page is no longer available.</string>
+
+    <!-- Journal + research deletion -->
+    <string name="delete_entry_title">Move entry to trash?</string>
+    <string name="delete_entry_body">You can restore it later from Settings → Trash.</string>
+    <string name="entry_moved_to_trash">Entry moved to trash</string>
+    <string name="delete_project_title">Move project to trash?</string>
+    <string name="delete_project_body">The project and its references can be restored from the trash.</string>
+    <string name="project_moved_to_trash">Project moved to trash</string>
+    <string name="delete_reference_title">Move reference to trash?</string>
+    <string name="delete_reference_body">You can restore it later from Settings → Trash.</string>
+
+    <!-- Trash -->
+    <string name="empty_trash">Empty trash</string>
+    <string name="empty_trash_title">Empty the trash?</string>
+    <string name="empty_trash_body">Everything in the trash will be deleted permanently. This cannot be undone.</string>
+    <string name="trash_emptied">Trash emptied</string>
+    <string name="trash_empty_summary">Nothing deleted</string>
+    <string name="delete_forever_title">Delete permanently?</string>
+    <string name="delete_forever_body">“%1$s” will be removed forever. This cannot be undone.</string>
+    <string name="delete_forever">Delete forever</string>
+    <string name="deleted_forever">Deleted permanently</string>
+    <string name="restored">Restored</string>
+
+    <!-- Storage / backup -->
+    <string name="storage_used">%1$s used</string>
+    <string name="backup_failed">Backup failed. Check free space and try again.</string>
+    <string name="restore_working">Reading backup…</string>
+    <string name="restore_ready">Backup ready — restarting…</string>
+    <string name="restore_failed">Restore failed: %1$s</string>
+
+    <!-- Privacy / about -->
+    <string name="app_lock_on">App lock on — the archive asks for your biometric or device PIN.</string>
+    <string name="app_lock_off">App lock off</string>
+    <string name="about_version_value">Version %1$s</string>
+
+    <plurals name="trash_items">
+        <item quantity="one">%1$d item in trash</item>
+        <item quantity="other">%1$d items in trash</item>
+    </plurals>
+</resources>
