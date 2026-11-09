@@ -49,8 +49,7 @@
                 android:paddingStart="26dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="26dp"
-                android:paddingBottom="96dp"
-                app:orientation="horizontal" />
+                android:paddingBottom="96dp" />
 
             <include
                 android:id="@+id/empty_state"
