@@ -51,12 +51,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 - <<'PY' > /tmp/body.md
+          python3 - <<'PY'
+          import json
           log = open('build.log', errors='replace').read()
           tail = "\n".join(log.splitlines()[-150:])
-          print("Gradle build failed. Last 150 lines:\n\n```\n" + tail[-60000:] + "\n```")
+          body = "Gradle build failed. Last 150 lines:\n\n```\n" + tail[-60000:] + "\n```"
+          json.dump({"body": body}, open('/tmp/payload.json', 'w'))
           PY
-          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" -f body=@/tmp/body.md || true
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/payload.json || true
 
       - name: Upload APK as workflow artifact
         if: success()
