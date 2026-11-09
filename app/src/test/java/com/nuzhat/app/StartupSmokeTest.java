@@ -123,7 +123,7 @@ public class StartupSmokeTest {
         Intent canvasIntent = new Intent(app, CanvasActivity.class)
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
-                Robolectric.buildActivity(CanvasActivity.class).withIntent(canvasIntent).setup();
+                Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
         String seenExtra = canvasController.get().getIntent() == null ? "<no intent>"
                 : String.valueOf(canvasController.get().getIntent()
                         .getStringExtra(CanvasActivity.EXTRA_PAGE_ID));
