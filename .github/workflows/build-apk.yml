@@ -134,6 +134,11 @@ jobs:
                       details.append(case.get('name') + ':\n' + '\n'.join(frames))
           if total == 0:
               body = "JVM unit tests did not produce results - the build probably failed first."
+              try:
+                  log_text = open('test.log', errors='replace').read().splitlines()
+                  body += "\n\n```\n" + "\n".join(log_text[-80:])[-20000:] + "\n```"
+              except OSError:
+                  pass
           else:
               verdict = "PASSED" if failures == 0 and errors == 0 else "FAILED"
               body = (f"Unit tests {verdict}: {total} run, {failures} failures, {errors} errors, "
