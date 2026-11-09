@@ -10,6 +10,11 @@ on the device.
 
 ## Build & install
 
+**Download the APK:** [ARCHIVE-debug.apk](https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/ARCHIVE-debug.apk)
+— every push to this repository builds it on GitHub Actions, so no local toolchain is needed to try
+the app. Open the link on the phone, allow installs from the browser, and tap the file.
+
+
 See **[INSTALL.md](INSTALL.md)** for phone installation (APK build, sideloading, troubleshooting).
 
 ## Build

@@ -99,3 +99,48 @@ jobs:
                  --title "ARCHIVE — latest debug build" \
                  --notes "Debug APK built automatically from commit ${{ github.sha }}. Tap the APK on your phone to install."
           gh release upload apk-latest ARCHIVE-debug.apk --clobber
+
+      # The tests have never run anywhere; run them here and report honestly.
+      - name: Run JVM unit tests
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee test.log
+
+      - name: Report unit-test results on the commit
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import glob, json, re, xml.etree.ElementTree as ET
+          total = failures = errors = skipped = 0
+          suites = []
+          for path in glob.glob('app/build/test-results/testDebugUnitTest/*.xml'):
+              root = ET.parse(path).getroot()
+              total += int(root.get('tests', 0))
+              failures += int(root.get('failures', 0))
+              errors += int(root.get('errors', 0))
+              skipped += int(root.get('skipped', 0))
+              suites.append(root.get('name', path))
+          if total == 0:
+              body = "JVM unit tests did not produce results - the build probably failed first."
+          else:
+              verdict = "PASSED" if failures == 0 and errors == 0 else "FAILED"
+              body = (f"Unit tests {verdict}: {total} run, {failures} failures, {errors} errors, "
+                      f"{skipped} skipped across {len(suites)} classes.\n\n" +
+                      "\n".join("- " + s for s in sorted(suites)))
+              log = ''
+              try:
+                  log = open('test.log', errors='replace').read()
+              except OSError:
+                  pass
+              if verdict == "FAILED":
+                  interesting = [l for l in log.splitlines()
+                                 if 'FAILED' in l or 'error:' in l or 'AssertionError' in l
+                                 or 'expected' in l.lower()]
+                  body += "\n\n```\n" + "\n".join(interesting[:120])[-20000:] + "\n```"
+          json.dump({"body": body}, open('/tmp/tests.json', 'w'))
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/tests.json || true

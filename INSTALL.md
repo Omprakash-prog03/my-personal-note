@@ -1,18 +1,29 @@
 # Installing ARCHIVE on your phone
 
-There is **no prebuilt APK in this repository** — the development sandbox has no Android SDK/JDK, so
-the APK has to be built once on your computer. After that, installing on the phone takes a minute.
+## Fastest way — the APK is already built
 
-| Requirement | Detail |
-|---|---|
-| Phone | Android 8.0 (API 26) or newer, ~60 MB free |
-| Computer | Android Studio (Ladybug or newer) — it bundles JDK 17 |
-| SDK | Android 15 / API 35 platform + Build Tools 35.0.0 (Android Studio prompts for these) |
-| Network | Only for the **first build**: Gradle 8.9, AGP 8.7.3, AndroidX and Material are downloaded then |
+Every push builds a fresh APK and publishes it here, so there is nothing to compile:
 
----
+**https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/ARCHIVE-debug.apk**
 
-## 1. Build the APK
+Open that link **on the phone**, then:
+
+1. Tap **Download**. The file lands in *Downloads* (or the browser's download list).
+2. Tap the downloaded `ARCHIVE-debug.apk`. Android will say installs from this app are not allowed —
+   tap **Settings**, enable **Allow from this source**, then press back.
+3. Tap **Install**, then **Open**.
+4. Sign in with `om` / `sahuom123`.
+
+Play Protect may warn that the app is unknown: *More details → Install anyway*. That is expected for
+any app that did not come from the Play Store.
+
+The link always points at the newest successful build
+([all builds](https://github.com/Omprakash-prog03/my-personal-note/actions/workflows/build-apk.yml) ·
+[releases](https://github.com/Omprakash-prog03/my-personal-note/releases/tag/apk-latest)).
+
+## Build it yourself (optional)
+
+### Build the APK
 
 ### Option A — Android Studio (easiest)
 
