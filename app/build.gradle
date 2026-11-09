@@ -56,6 +56,8 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        // Robolectric needs the merged resources to inflate the real themes and layouts.
+        unitTests.includeAndroidResources = true
     }
 }
 
@@ -90,6 +92,8 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.1.0'
 
     testImplementation 'junit:junit:4.13.2'
+    // Launches activities on the JVM so startup crashes are caught without a device.
+    testImplementation 'org.robolectric:robolectric:4.14.1'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'

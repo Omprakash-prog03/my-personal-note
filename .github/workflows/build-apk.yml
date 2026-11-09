@@ -139,7 +139,8 @@ jobs:
               if verdict == "FAILED":
                   interesting = [l for l in log.splitlines()
                                  if 'FAILED' in l or 'error:' in l or 'AssertionError' in l
-                                 or 'expected' in l.lower()]
+                                 or 'expected' in l.lower() or 'Exception' in l or 'Caused by' in l
+                                 or 'at com.archive' in l]
                   body += "\n\n```\n" + "\n".join(interesting[:120])[-20000:] + "\n```"
           json.dump({"body": body}, open('/tmp/tests.json', 'w'))
           PY

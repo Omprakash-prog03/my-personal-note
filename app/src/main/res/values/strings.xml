@@ -557,4 +557,8 @@
     <string name="reset_crop">Reset crop</string>
 
     <string name="canvas_save_failed">Unable to save — Retry</string>
+    <string name="crash_report_title">The app closed unexpectedly last time</string>
+    <string name="crash_report_copy">Copy details</string>
+    <string name="crash_report_copied">Copied — paste it into a message to report the crash</string>
+    <string name="crash_report_dismiss">Dismiss</string>
 </resources>

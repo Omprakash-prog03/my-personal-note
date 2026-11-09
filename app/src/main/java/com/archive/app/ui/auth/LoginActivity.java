@@ -81,6 +81,7 @@ public class LoginActivity extends BaseActivity {
 
         username.setText(auth.username());
         keep.setChecked(auth.keepSignedIn());
+        showPreviousCrashIfAny();
 
         findViewById(R.id.login_button).setOnClickListener(v -> attempt());
         password.setOnEditorActionListener((v, actionId, event) -> {
@@ -90,6 +91,30 @@ public class LoginActivity extends BaseActivity {
             }
             return false;
         });
+    }
+
+    /**
+     * If the last run died, the stack trace is shown here instead of vanishing: the user can copy it
+     * and the dialog is dismissed for good once read.
+     */
+    private void showPreviousCrashIfAny() {
+        final String report = com.archive.app.utils.CrashLog.read(this);
+        if (report == null) return;
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.crash_report_title)
+                .setMessage(report)
+                .setPositiveButton(R.string.crash_report_copy, (dialog, which) -> {
+                    android.content.ClipboardManager clipboard =
+                            (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    if (clipboard != null) {
+                        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("ARCHIVE crash", report));
+                        android.widget.Toast.makeText(this, R.string.crash_report_copied,
+                                android.widget.Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton(R.string.crash_report_dismiss, (dialog, which) ->
+                        com.archive.app.utils.CrashLog.clear(LoginActivity.this))
+                .show();
     }
 
     private void attempt() {
