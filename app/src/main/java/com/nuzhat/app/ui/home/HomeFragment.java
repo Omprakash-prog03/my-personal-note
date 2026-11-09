@@ -61,6 +61,11 @@ public class HomeFragment extends Fragment {
     private final PageAdapter pageAdapter = new PageAdapter();
     private final MediaAdapter mediaAdapter = new MediaAdapter();
 
+    /** Collections picked by long press; the bar under the page acts on this set. */
+    private final java.util.LinkedHashSet<String> selectedIds = new java.util.LinkedHashSet<>();
+    private List<CollectionDao.CollectionWithCount> chapterItems = new ArrayList<>();
+    private View selectionBar;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -98,6 +103,11 @@ public class HomeFragment extends Fragment {
         root.findViewById(R.id.quick_collection).setOnClickListener(v -> CreateSheet.newCollection(requireActivity(), () -> { }));
         root.findViewById(R.id.quick_page).setOnClickListener(v -> CreateSheet.newPage(requireActivity(), () -> { }));
 
+        selectionBar = root.findViewById(R.id.selection_bar);
+        ((TextView) root.findViewById(R.id.selection_count)).setText("");
+        root.findViewById(R.id.selection_close).setOnClickListener(v -> exitSelection());
+        root.findViewById(R.id.selection_actions).setOnClickListener(this::showSelectionActions);
+
         TextView journalTitle = root.findViewById(R.id.journal_title);
         TextView journalSnippet = root.findViewById(R.id.journal_snippet);
         TextView journalDate = root.findViewById(R.id.journal_date);
@@ -125,8 +135,21 @@ public class HomeFragment extends Fragment {
         repo.collections().observe(getViewLifecycleOwner(), collectionsList -> {
             List<CollectionDao.CollectionWithCount> list = collectionsList == null
                     ? new ArrayList<>() : collectionsList;
+            chapterItems = list;
             chapterAdapter.submit(list);
             root.findViewById(R.id.section_collections).setVisibility(list.isEmpty() ? View.GONE : View.VISIBLE);
+            // A collection can vanish while selected (trashed elsewhere); drop those ids.
+            if (!selectedIds.isEmpty()) {
+                java.util.LinkedHashSet<String> live = new java.util.LinkedHashSet<>();
+                for (CollectionDao.CollectionWithCount item : list) {
+                    if (selectedIds.contains(item.collection.id)) live.add(item.collection.id);
+                }
+                if (live.size() != selectedIds.size()) {
+                    selectedIds.clear();
+                    selectedIds.addAll(live);
+                    if (selectedIds.isEmpty()) exitSelection(); else updateSelectionBar();
+                }
+            }
         });
 
         repo.latestJournalEntry().observe(getViewLifecycleOwner(), entry -> {
@@ -152,6 +175,207 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
+    }
+
+    // ------------------------------------------------------------------ selection
+
+    private boolean inSelection() {
+        return !selectedIds.isEmpty();
+    }
+
+    private void toggleSelection(String id) {
+        if (!selectedIds.remove(id)) selectedIds.add(id);
+        if (selectedIds.isEmpty()) {
+            exitSelection();
+            return;
+        }
+        updateSelectionBar();
+        chapterAdapter.notifyDataSetChanged();
+    }
+
+    private void exitSelection() {
+        selectedIds.clear();
+        if (selectionBar != null) selectionBar.setVisibility(View.GONE);
+        chapterAdapter.notifyDataSetChanged();
+    }
+
+    private void updateSelectionBar() {
+        if (selectionBar == null) return;
+        selectionBar.setVisibility(View.VISIBLE);
+        ((TextView) selectionBar.findViewById(R.id.selection_count))
+                .setText(getString(R.string.selection_count, selectedIds.size()));
+    }
+
+    /** Single-selection actions stay disabled for multi-selection rather than guessing a target. */
+    private void showSelectionActions(View anchor) {
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(requireContext(), anchor);
+        menu.getMenu().add(0, 1, 0, R.string.rename);
+        menu.getMenu().add(0, 2, 1, R.string.duplicate);
+        menu.getMenu().add(0, 3, 2, R.string.move_up);
+        menu.getMenu().add(0, 4, 3, R.string.move_down);
+        menu.getMenu().add(0, 5, 4, R.string.archive);
+        menu.getMenu().add(0, 6, 5, R.string.delete);
+        boolean single = selectedIds.size() == 1;
+        menu.getMenu().findItem(1).setEnabled(single);
+        menu.getMenu().findItem(3).setEnabled(single);
+        menu.getMenu().findItem(4).setEnabled(single);
+        menu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == 1) renameSelected();
+            else if (id == 2) duplicateSelected();
+            else if (id == 3) moveSelected(-1);
+            else if (id == 4) moveSelected(1);
+            else if (id == 5) archiveSelected();
+            else if (id == 6) deleteSelected();
+            return true;
+        });
+        menu.show();
+    }
+
+    private String onlySelected() {
+        return selectedIds.isEmpty() ? null : selectedIds.iterator().next();
+    }
+
+    private void renameSelected() {
+        String id = onlySelected();
+        if (id == null) return;
+        repo.collectionOnce(id, collection -> {
+            if (collection == null) return;
+            android.widget.EditText field = new android.widget.EditText(requireContext());
+            field.setText(collection.name);
+            field.setSelection(collection.name.length());
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.rename)
+                    .setView(padDialogView(field))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.rename, (d, w) -> {
+                        String name = field.getText().toString().trim();
+                        if (name.isEmpty() || name.equals(collection.name)) return;
+                        collection.name = name;
+                        repo.saveCollection(collection, () -> {
+                            toast(R.string.renamed_toast);
+                            exitSelection();
+                        });
+                    })
+                    .show();
+        });
+    }
+
+    private void duplicateSelected() {
+        final List<String> ids = new ArrayList<>(selectedIds);
+        final int[] remaining = {ids.size()};
+        final boolean[] failed = {false};
+        for (String id : ids) {
+            repo.duplicateCollection(id, copyId -> {
+                if (copyId == null) failed[0] = true;
+                if (--remaining[0] == 0) {
+                    toast(failed[0] ? R.string.copy_failed : R.string.duplicated_toast);
+                    exitSelection();
+                }
+            });
+        }
+    }
+
+    /** Neighbour swap in the ordered list, written back so it survives a restart. */
+    private void moveSelected(int delta) {
+        String id = onlySelected();
+        if (id == null) return;
+        int index = -1;
+        for (int i = 0; i < chapterItems.size(); i++) {
+            if (chapterItems.get(i).collection.id.equals(id)) { index = i; break; }
+        }
+        int target = index + delta;
+        if (index < 0 || target < 0 || target >= chapterItems.size()) {
+            toast(R.string.reordered_toast);
+            return;
+        }
+        CollectionEntity a = chapterItems.get(index).collection;
+        CollectionEntity b = chapterItems.get(target).collection;
+        int sortA = a.sortOrder;
+        int sortB = b.sortOrder;
+        if (sortA == sortB) {
+            // Equal sort orders are common on freshly created collections: give them real values.
+            sortA = index;
+            sortB = target;
+        }
+        a.sortOrder = sortB;
+        b.sortOrder = sortA;
+        final int pending = 2;
+        final int[] done = {0};
+        Runnable finished = () -> {
+            if (++done[0] == pending) {
+                repo.activity().record(
+                        com.nuzhat.app.data.entity.ActivityEntity.COLLECTION_RENAMED,
+                        "Reordered \"" + a.name + "\"", a.id, null, null);
+                exitSelection();
+                toast(R.string.reordered_toast);
+            }
+        };
+        repo.saveCollection(a, finished);
+        repo.saveCollection(b, finished);
+    }
+
+    private void archiveSelected() {
+        final List<String> ids = new ArrayList<>(selectedIds);
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.archive_collection_title)
+                .setMessage(getString(R.string.archive_collection_body, ids.size()))
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.archive, (d, w) -> {
+                    final int[] remaining = {ids.size()};
+                    for (String id : ids) {
+                        repo.collectionOnce(id, collection -> {
+                            if (collection != null) {
+                                collection.archived = true;
+                                repo.saveCollection(collection, () -> { });
+                            }
+                            if (--remaining[0] == 0) {
+                                toast(R.string.archived_toast);
+                                exitSelection();
+                            }
+                        });
+                    }
+                })
+                .show();
+    }
+
+    private void deleteSelected() {
+        final List<String> ids = new ArrayList<>(selectedIds);
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(ids.size() == 1 ? R.string.delete_collection_title
+                        : R.string.delete_collection_title)
+                .setMessage(getString(R.string.delete_collection_body,
+                        ids.size() == 1 ? nameOf(ids.get(0)) : ids.size() + " collections"))
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.delete, (d, w) -> {
+                    final int[] remaining = {ids.size()};
+                    for (String id : ids) {
+                        repo.trashCollection(id, () -> {
+                            if (--remaining[0] == 0) {
+                                toast(R.string.collection_moved_to_trash);
+                                exitSelection();
+                            }
+                        });
+                    }
+                })
+                .show();
+    }
+
+    private String nameOf(String id) {
+        for (CollectionDao.CollectionWithCount item : chapterItems) {
+            if (item.collection.id.equals(id)) return item.collection.name;
+        }
+        return "";
+    }
+
+    private View padDialogView(View field) {
+        int pad = Math.round(20 * getResources().getDisplayMetrics().density);
+        field.setPadding(pad, pad / 2, pad, pad / 2);
+        return field;
+    }
+
+    private void toast(int res) {
+        android.widget.Toast.makeText(requireContext(), res, android.widget.Toast.LENGTH_SHORT).show();
     }
 
     private void openJournal(String id) {
@@ -251,10 +475,22 @@ public class HomeFragment extends Fragment {
                     }
                 });
             }
+            boolean selected = selectedIds.contains(collection.id);
+            holder.itemView.setAlpha(inSelection() && !selected ? 0.45f : 1f);
+            holder.itemView.setScaleX(selected ? 0.97f : 1f);
+            holder.itemView.setScaleY(selected ? 0.97f : 1f);
             holder.itemView.setOnClickListener(v -> {
+                if (inSelection()) {
+                    toggleSelection(collection.id);
+                    return;
+                }
                 Intent intent = new Intent(requireActivity(), CollectionActivity.class);
                 intent.putExtra(CollectionActivity.EXTRA_COLLECTION_ID, collection.id);
                 startActivity(intent);
+            });
+            holder.itemView.setOnLongClickListener(v -> {
+                toggleSelection(collection.id);
+                return true;
             });
         }
 
