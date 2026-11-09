@@ -53,10 +53,14 @@ public class PageFormatTest {
     }
 
     @Test
-    public void canvasScalesStayConsistent() {
-        // The exporter caps the long edge at 4096 px; A4 portrait must still fit at 2x.
-        int width = PageFormat.widthOf(PageFormat.A4_PORTRAIT) * 2;
-        int height = PageFormat.heightOf(PageFormat.A4_PORTRAIT) * 2;
-        assertTrue(Math.max(width, height) > 4096);
+    public void exportScaleStaysUnderThePixelCap() {
+        // The exporter caps the long edge at 4096 px: A4 must still fit at 2x, and 3x is the point
+        // where the cap has to kick in.
+        int at2x = Math.max(PageFormat.widthOf(PageFormat.A4_PORTRAIT) * 2,
+                PageFormat.heightOf(PageFormat.A4_PORTRAIT) * 2);
+        int at3x = Math.max(PageFormat.widthOf(PageFormat.A4_PORTRAIT) * 3,
+                PageFormat.heightOf(PageFormat.A4_PORTRAIT) * 3);
+        assertTrue("2x A4 should fit under the 4096 px cap", at2x <= 4096);
+        assertTrue("3x A4 should exceed the cap", at3x > 4096);
     }
 }

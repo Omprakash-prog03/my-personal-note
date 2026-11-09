@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.archive.app.R;
+import com.archive.app.utils.PickerRequest;
 import com.archive.app.canvas.commands.CanvasCommand;
 import com.archive.app.canvas.commands.ElementAddCommand;
 import com.archive.app.canvas.commands.ElementRemoveCommand;
@@ -237,8 +238,7 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
     @Override
     public void onOpenEnvelope(EnvelopeElement element) {
         ElementDialogs.editEnvelope(this, element, this,
-                () -> pickImages.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build()),
+                () -> pickImages.launch(PickerRequest.images()),
                 this::afterContentChange);
     }
 
@@ -416,8 +416,7 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
     // ------------------------------------------------------------------ add element flow
 
     @Override public void onGallery() {
-        pickImages.launch(new PickVisualMediaRequest.Builder()
-                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build());
+        pickImages.launch(PickerRequest.images());
     }
 
     @Override public void onCamera() {
@@ -789,8 +788,7 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         }
         if (id == R.id.action_background) {
             CanvasSheets.showBackgroundSheet(this, canvasView.document(), this::applyBackground,
-                    () -> pickBackground.launch(new PickVisualMediaRequest.Builder()
-                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build()));
+                    () -> pickBackground.launch(PickerRequest.images()));
             return true;
         }
         if (id == R.id.action_export) {

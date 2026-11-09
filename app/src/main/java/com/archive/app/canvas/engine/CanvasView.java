@@ -233,7 +233,7 @@ public class CanvasView extends View {
     }
 
     private void notifyZoom() {
-        if (listener != null) listener.onZoomChanged();
+        if (listener != null) listener.onZoomChanged(Math.round(viewport.scale * 100));
     }
 
     @Override

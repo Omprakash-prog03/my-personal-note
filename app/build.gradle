@@ -34,6 +34,11 @@ android {
         }
     }
 
+    // Report many javac errors per run: CI is the only compiler for this project.
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs += ['-Xmaxerrs', '400']
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

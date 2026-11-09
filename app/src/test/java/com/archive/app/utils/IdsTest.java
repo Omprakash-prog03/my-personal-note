@@ -39,6 +39,6 @@ public class IdsTest {
         UUID parsed = UUID.fromString(id);
         assertEquals(id, parsed.toString());
         assertEquals(36, id.length());
-        assertEquals(4, id.charAt(14)); // version nibble position
+        assertEquals('4', id.charAt(14)); // randomUUID is a version 4 UUID
     }
 }

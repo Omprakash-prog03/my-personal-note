@@ -1,0 +1,170 @@
+name: Build installable APK
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # ubuntu-latest already ships the Android SDK; only the platform and build
+      # tools matter. sdkmanager is not always on PATH, so fall back to the SDK dir.
+      - name: Install platform 35 and build tools
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "Using SDK at $SDK"
+          SDKMANAGER="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          [ -x "$SDKMANAGER" ] || SDKMANAGER="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMANAGER" ]; then echo "sdkmanager not found" >&2; exit 1; fi
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0" > /dev/null
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemble debug APK
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleDebug 2>&1 | tee build.log
+
+      # Only the tail is not enough: javac errors can sit thousands of lines above
+      # the stack traces. Post a filtered extract, plus the raw tail as a fallback.
+      - name: Report build errors on the commit
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, re
+          log = open('build.log', errors='replace').read()
+          lines = log.splitlines()
+          keep = []
+          matchers = ('error:', 'e: ', 'What went wrong', 'FAILURE:', 'Caused by:',
+                      'Execution failed', '> Task :', 'AAPT', 'aapt2', 'Duplicate class',
+                      'cannot find symbol', 'package ', 'is not abstract')
+          for i, line in enumerate(lines):
+              if any(m in line for m in matchers) or re.match(r'\s+\S+\.java:\d+: ', line):
+                  keep.append(line)
+                  keep.extend(lines[i + 1:i + 4])  # symbol:, location:, source line
+          body = "Gradle build failed.\n\nFiltered output:\n\n```\n" + "\n".join(keep[:400])[-50000:]
+          body += "\n```\n\nLast 60 lines:\n\n```\n" + "\n".join(lines[-60:])[-8000:] + "\n```"
+          json.dump({"body": body}, open('/tmp/payload.json', 'w'))
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/payload.json || true
+
+      - name: Keep the raw build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
+
+      - name: Upload APK as workflow artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      # Release assets are public downloads; workflow artifacts need a login.
+      # This release file is what you tap on the phone.
+      - name: Publish APK to the apk-latest release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk ARCHIVE-debug.apk
+          gh release view apk-latest >/dev/null 2>&1 \
+            || gh release create apk-latest \
+                 --title "ARCHIVE — latest debug build" \
+                 --notes "Debug APK built automatically from commit ${{ github.sha }}. Tap the APK on your phone to install."
+          gh release upload apk-latest ARCHIVE-debug.apk --clobber
+
+      # The tests have never run anywhere; run them here and report honestly.
+      - name: Run JVM unit tests
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee test.log
+
+      - name: Report unit-test results on the commit
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import glob, json, re, xml.etree.ElementTree as ET
+          total = failures = errors = skipped = 0
+          suites = []
+          for path in glob.glob('app/build/test-results/testDebugUnitTest/*.xml'):
+              root = ET.parse(path).getroot()
+              total += int(root.get('tests', 0))
+              failures += int(root.get('failures', 0))
+              errors += int(root.get('errors', 0))
+              skipped += int(root.get('skipped', 0))
+              suites.append(root.get('name', path))
+          if total == 0:
+              body = "JVM unit tests did not produce results - the build probably failed first."
+          else:
+              verdict = "PASSED" if failures == 0 and errors == 0 else "FAILED"
+              body = (f"Unit tests {verdict}: {total} run, {failures} failures, {errors} errors, "
+                      f"{skipped} skipped across {len(suites)} classes.\n\n" +
+                      "\n".join("- " + s for s in sorted(suites)))
+              log = ''
+              try:
+                  log = open('test.log', errors='replace').read()
+              except OSError:
+                  pass
+              if verdict == "FAILED":
+                  interesting = [l for l in log.splitlines()
+                                 if 'FAILED' in l or 'error:' in l or 'AssertionError' in l
+                                 or 'expected' in l.lower()]
+                  body += "\n\n```\n" + "\n".join(interesting[:120])[-20000:] + "\n```"
+          json.dump({"body": body}, open('/tmp/tests.json', 'w'))
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/tests.json || true
+
+      # Instrumented tests need a device, but compiling them catches real errors.
+      - name: Compile the instrumented tests
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon compileDebugAndroidTestJavaWithJavac 2>&1 | tee androidtest.log
+
+      - name: Report instrumented-test compilation on the commit
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          log = open('androidtest.log', errors='replace').read() if __import__('os').path.exists('androidtest.log') else ''
+          ok = 'BUILD SUCCESSFUL' in log
+          lines = [l for l in log.splitlines() if 'error:' in l or 'symbol:' in l]
+          body = ("Instrumented tests compile cleanly (not executed - needs a device)." if ok
+                  else "Instrumented tests FAILED TO COMPILE.\n\n```\n" + "\n".join(lines[:80])[-15000:] + "\n```")
+          json.dump({"body": body}, open('/tmp/androidtest.json', 'w'))
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/androidtest.json || true

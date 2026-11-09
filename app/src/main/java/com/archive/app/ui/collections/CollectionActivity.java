@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archive.app.R;
+import com.archive.app.utils.PickerRequest;
 import com.archive.app.canvas.engine.CanvasDocument;
 import com.archive.app.canvas.engine.CanvasRenderer;
 import com.archive.app.data.entity.CollectionEntity;
@@ -126,8 +127,7 @@ public class CollectionActivity extends BaseActivity {
             return true;
         }
         if (id == R.id.action_cover) {
-            coverPicker.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build());
+            coverPicker.launch(PickerRequest.images());
             return true;
         }
         if (id == R.id.action_favourite) {

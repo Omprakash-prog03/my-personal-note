@@ -10,6 +10,7 @@ import com.archive.app.data.entity.CollectionEntity;
 import com.archive.app.data.entity.MediaEntity;
 import com.archive.app.data.repository.ArchiveRepository;
 import com.archive.app.data.storage.ThumbnailLoader;
+import com.archive.app.utils.UiUtils;
 
 /** Shared binding for the two collection card layouts (grid and carousel). */
 public final class CollectionCardBinder {
