@@ -164,7 +164,8 @@ large binaries are never stored in SQLite.
 | Image import, camera capture, drawing/object placement entries | ✅ recorded when the element is added |
 | Object move / resize / rotate entries | ✅ one entry when the gesture completes, not per frame |
 | Page and collection export entries | ✅ recorded after the file is written |
-| Activity history preferences in Settings (retention, clear) | ⛔ not implemented |
+| Long-press selection mode on the home chapter rail (rename, duplicate, reorder, archive, trash with confirmation) | ✅ |
+| Activity history preferences in Settings: retention (7/30/90/365 days or keep everything) and a confirmed clear | ✅ |
 
 Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on-device testing ·
 ⛔ not implemented
