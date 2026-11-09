@@ -17,7 +17,7 @@
             android:background="?attr/colorSurface"
             app:navigationIcon="@drawable/ic_back"
             app:title="@string/nav_library"
-            app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+            app:titleTextAppearance="@style/TextAppearance.Nuzhat.Title" />
 
         <View
             android:layout_width="match_parent"
@@ -32,8 +32,8 @@
             android:paddingEnd="20dp"
             android:paddingTop="14dp"
             android:paddingBottom="6dp"
-            android:textAppearance="@style/TextAppearance.Archive.Body"
-            android:textColor="?attr/archiveMuted"
+            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+            android:textColor="?attr/nuzhatMuted"
             android:visibility="gone" />
 
         <FrameLayout
@@ -41,17 +41,15 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pages_recycler"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pages_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="96dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2" />
+                android:paddingStart="26dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="96dp" />
 
             <include
                 android:id="@+id/empty_state"

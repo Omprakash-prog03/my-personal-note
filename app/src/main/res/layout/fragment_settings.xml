@@ -26,7 +26,7 @@
 
         <!-- APPEARANCE -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
@@ -38,7 +38,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_appearance" />
@@ -48,8 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="@string/settings_theme"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/theme_group"
@@ -92,8 +92,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_accent"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <LinearLayout
                     android:id="@+id/accent_container"
@@ -107,8 +107,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_home_background"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <LinearLayout
                     android:id="@+id/home_background_container"
@@ -121,7 +121,7 @@
 
         <!-- CANVAS -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -133,7 +133,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_canvas" />
@@ -156,14 +156,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/settings_default_format"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/value_default_format"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorPrimary" />
 
                     <ImageView
@@ -172,7 +172,7 @@
                         android:layout_marginStart="4dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -192,14 +192,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/settings_default_mode"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/value_default_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorPrimary" />
 
                     <ImageView
@@ -208,7 +208,7 @@
                         android:layout_marginStart="4dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
 
 
@@ -230,14 +230,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/settings_export_format"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/value_export_format"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorPrimary" />
 
                     <ImageView
@@ -246,7 +246,7 @@
                         android:layout_marginStart="4dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -266,14 +266,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/settings_export_scale"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/value_export_scale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Archive.Body"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                         android:textColor="?attr/colorPrimary" />
 
                     <ImageView
@@ -282,7 +282,7 @@
                         android:layout_marginStart="4dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -292,7 +292,7 @@
                     android:layout_marginTop="8dp"
                     android:minHeight="44dp"
                     android:text="@string/settings_snap"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                     android:textColor="?attr/colorOnSurface" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -301,14 +301,14 @@
                     android:layout_height="wrap_content"
                     android:minHeight="44dp"
                     android:text="@string/settings_grid"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                     android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- STORAGE -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -320,7 +320,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_storage" />
@@ -330,8 +330,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_backup"
@@ -382,15 +382,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_trash"
-                            android:textAppearance="@style/TextAppearance.Archive.Title"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:id="@+id/trash_summary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.Archive.Body"
-                            android:textColor="?attr/archiveMuted" />
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                            android:textColor="?attr/nuzhatMuted" />
                     </LinearLayout>
 
                     <ImageView
@@ -398,14 +398,14 @@
                         android:layout_height="20dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- PRIVACY -->
+        <!-- ACTIVITY HISTORY -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -417,7 +417,110 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_history" />
+
+                <LinearLayout
+                    android:id="@+id/row_history_retention"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_history_retention"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Title"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/value_history_retention"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                            android:textColor="?attr/nuzhatMuted" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="?attr/nuzhatMuted" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/row_history_clear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_history_clear"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Title"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:id="@+id/value_history_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                            android:textColor="?attr/nuzhatMuted" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="?attr/nuzhatMuted" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- PRIVACY -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Nuzhat.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_privacy" />
@@ -429,22 +532,22 @@
                     android:layout_marginTop="8dp"
                     android:minHeight="44dp"
                     android:text="@string/settings_app_lock"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_app_lock_desc"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
 
         <!-- ACCOUNT -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -456,7 +559,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/account_title" />
@@ -466,7 +569,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                     android:textColor="?attr/colorOnSurface" />
 
                 <LinearLayout
@@ -487,7 +590,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/account_change_password"
-                        android:textAppearance="@style/TextAppearance.Archive.Title"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                         android:textColor="?attr/colorOnSurface" />
 
                     <ImageView
@@ -495,7 +598,7 @@
                         android:layout_height="18dp"
                         android:contentDescription="@string/account_change_password"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="?attr/archiveMuted" />
+                        app:tint="?attr/nuzhatMuted" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -515,7 +618,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/account_sign_out"
-                        android:textAppearance="@style/TextAppearance.Archive.Title"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                         android:textColor="?attr/colorError" />
 
                     <ImageView
@@ -530,7 +633,7 @@
 
         <!-- ABOUT -->
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -542,7 +645,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_about" />
@@ -552,7 +655,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.Archive.Title"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
@@ -560,16 +663,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/app_tagline"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/settings_credits"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_licenses"

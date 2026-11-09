@@ -14,7 +14,7 @@
         app:menu="@menu/menu_journal"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/create_journal"
-        app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+        app:titleTextAppearance="@style/TextAppearance.Nuzhat.Title" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/entry_date"
-                style="@style/Widget.Archive.SectionLabel"
+                style="@style/Widget.Nuzhat.SectionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -46,7 +46,7 @@
                 android:inputType="textCapSentences"
                 android:maxLines="2"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted"
+                android:textColorHint="?attr/nuzhatMuted"
                 android:textSize="26sp" />
 
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="@string/journal_mood"
-                style="@style/Widget.Archive.SectionLabel" />
+                style="@style/Widget.Nuzhat.SectionLabel" />
 
             <LinearLayout
                 android:id="@+id/mood_container"
@@ -75,9 +75,9 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:lineSpacingMultiplier="1.35"
                 android:minHeight="320dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted"
+                android:textColorHint="?attr/nuzhatMuted"
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

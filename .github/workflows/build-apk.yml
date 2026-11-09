@@ -58,9 +58,11 @@ jobs:
           lines = log.splitlines()
           keep = []
           matchers = ('error:', 'e: ', 'What went wrong', 'FAILURE:', 'Caused by:',
-                      'Execution failed', '> Task :', 'AAPT', 'aapt2', 'Duplicate class',
+                      'Execution failed', 'Task :app:', 'AAPT', 'aapt2', 'Duplicate class',
                       'cannot find symbol', 'package ', 'is not abstract')
           for i, line in enumerate(lines):
+              if ('> Task :' in line and 'FAILED' not in line):
+                  continue
               if any(m in line for m in matchers) or re.match(r'\s+\S+\.java:\d+: ', line):
                   keep.append(line)
                   keep.extend(lines[i + 1:i + 4])  # symbol:, location:, source line
@@ -93,12 +95,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk ARCHIVE-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk NUZHAT-debug.apk
           gh release view apk-latest >/dev/null 2>&1 \
             || gh release create apk-latest \
                  --title "ARCHIVE — latest debug build" \
                  --notes "Debug APK built automatically from commit ${{ github.sha }}. Tap the APK on your phone to install."
-          gh release upload apk-latest ARCHIVE-debug.apk --clobber
+          gh release upload apk-latest NUZHAT-debug.apk --clobber
 
       # The tests have never run anywhere; run them here and report honestly.
       - name: Run JVM unit tests
@@ -132,6 +134,15 @@ jobs:
                       details.append(case.get('name') + ':\n' + '\n'.join(frames))
           if total == 0:
               body = "JVM unit tests did not produce results - the build probably failed first."
+              try:
+                  log_text = open('test.log', errors='replace').read().splitlines()
+                  picked = [l for l in log_text if 'error:' in l or 'FAILED' in l or 'Exception' in l
+                            or 'Caused by' in l or 'What went wrong' in l or '.java:' in l]
+                  if not picked:
+                      picked = log_text[-60:]
+                  body += "\n\n```\n" + "\n".join(picked)[-20000:] + "\n```"
+              except OSError:
+                  pass
           else:
               verdict = "PASSED" if failures == 0 and errors == 0 else "FAILED"
               body = (f"Unit tests {verdict}: {total} run, {failures} failures, {errors} errors, "

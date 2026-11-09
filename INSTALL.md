@@ -1,15 +1,15 @@
-# Installing ARCHIVE on your phone
+# Installing NUZHAT on your phone
 
 ## Fastest way — the APK is already built
 
 Every push builds a fresh APK and publishes it here, so there is nothing to compile:
 
-**https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/ARCHIVE-debug.apk**
+**https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/NUZHAT-debug.apk**
 
 Open that link **on the phone**, then:
 
 1. Tap **Download**. The file lands in *Downloads* (or the browser's download list).
-2. Tap the downloaded `ARCHIVE-debug.apk`. Android will say installs from this app are not allowed —
+2. Tap the downloaded `NUZHAT-debug.apk`. Android will say installs from this app are not allowed —
    tap **Settings**, enable **Allow from this source**, then press back.
 3. Tap **Install**, then **Open**.
 4. Sign in with `om` / `sahuom123`.

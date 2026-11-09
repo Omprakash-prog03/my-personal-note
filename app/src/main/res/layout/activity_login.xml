@@ -37,14 +37,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="serif"
+            android:text="@string/app_name_urdu"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/login_subtitle"
-            android:textAppearance="@style/TextAppearance.Archive.Body"
-            android:textColor="?attr/archiveMuted" />
+            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+            android:textColor="?attr/nuzhatMuted" />
 
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp">
@@ -56,7 +65,7 @@
                 android:padding="18dp">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/login_header" />
@@ -112,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:text="@string/login_keep"
-                    android:textAppearance="@style/TextAppearance.Archive.Body" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body" />
 
                 <TextView
                     android:id="@+id/login_error"
@@ -149,8 +158,8 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/login_offline_note"
-            android:textAppearance="@style/TextAppearance.Archive.Body"
-            android:textColor="?attr/archiveMuted" />
+            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+            android:textColor="?attr/nuzhatMuted" />
 
         <TextView
             android:layout_width="match_parent"
@@ -158,7 +167,7 @@
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/login_forgot_note"
-            android:textAppearance="@style/TextAppearance.Archive.Body"
-            android:textColor="?attr/archiveMuted" />
+            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+            android:textColor="?attr/nuzhatMuted" />
     </LinearLayout>
 </ScrollView>

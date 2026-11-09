@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/collection_card"
-    style="@style/Widget.Archive.Card"
+    style="@style/Widget.Nuzhat.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -69,7 +69,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textAppearance="@style/TextAppearance.Archive.Title"
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                     android:textColor="?attr/colorOnSurface" />
 
                 <ImageView
@@ -90,8 +90,8 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                android:textColor="?attr/nuzhatMuted" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

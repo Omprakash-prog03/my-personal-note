@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/list_label"
-            style="@style/Widget.Archive.SectionLabel"
+            style="@style/Widget.Nuzhat.SectionLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -33,11 +33,11 @@
             android:padding="9dp"
             android:src="@drawable/ic_list"
             android:visibility="gone"
-            app:tint="?attr/archiveMuted" />
+            app:tint="?attr/nuzhatMuted" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/list_new"
-            style="@style/Widget.Archive.TextButton"
+            style="@style/Widget.Nuzhat.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/new_page"

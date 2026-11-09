@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/tab_home" android:icon="@drawable/ic_home" android:title="@string/nav_home" />
-    <item android:id="@+id/tab_search" android:icon="@drawable/ic_search" android:title="@string/nav_search" />
+    <item android:id="@+id/tab_collections" android:icon="@drawable/ic_library" android:title="@string/nav_collections" />
     <item android:id="@+id/tab_create" android:icon="@drawable/ic_add" android:title="@string/nav_create" />
-    <item android:id="@+id/tab_library" android:icon="@drawable/ic_library" android:title="@string/nav_library" />
+    <item android:id="@+id/tab_activity" android:icon="@drawable/ic_activity" android:title="@string/nav_activity" />
     <item android:id="@+id/tab_settings" android:icon="@drawable/ic_settings" android:title="@string/nav_settings" />
 </menu>

@@ -7,14 +7,14 @@
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
     <application
-        android:name=".ArchiveApp"
+        android:name=".NuzhatApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Archive.Warm">
+        android:theme="@style/Theme.Nuzhat.Dark">
 
         <activity
             android:name=".ui.auth.LoginActivity"
@@ -40,10 +40,11 @@
             android:name=".media.camera.CameraActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Archive.Camera" />
+            android:theme="@style/Theme.Nuzhat.Camera" />
         <activity android:name=".ui.journal.JournalEditorActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.research.ResearchDetailActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.pdf.PdfViewerActivity" />
+        <activity android:name=".ui.search.SearchActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.trash.TrashActivity" />
         <activity android:name=".ui.settings.LicensesActivity" />
 

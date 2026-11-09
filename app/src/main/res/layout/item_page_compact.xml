@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.Archive.Card"
+    style="@style/Widget.Nuzhat.Card"
     android:layout_width="148dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
@@ -16,7 +16,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="104dp"
-            android:background="?attr/archiveBackdrop">
+            android:background="?attr/nuzhatBackdrop">
 
             <ImageView
                 android:id="@+id/page_thumb"
@@ -36,7 +36,7 @@
                 android:paddingEnd="6dp"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                android:textAppearance="@style/TextAppearance.Archive.Label"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Label"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </FrameLayout>
 
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Title"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
@@ -62,8 +62,8 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                android:textColor="?attr/nuzhatMuted" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

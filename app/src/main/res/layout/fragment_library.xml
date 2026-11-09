@@ -26,7 +26,7 @@
         app:tabGravity="fill"
         app:tabIndicatorColor="?attr/colorPrimary"
         app:tabMode="scrollable"
-        app:tabTextColor="?attr/archiveMuted" />
+        app:tabTextColor="?attr/nuzhatMuted" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
