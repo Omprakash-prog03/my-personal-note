@@ -435,13 +435,11 @@
 
     <!-- Camera -->
     <string name="camera_permission_needed">Camera access is needed to take a photo.</string>
-    <string name="camera_unavailable">No camera is available on this device.</string>
     <string name="capture_failed">Could not take the photo. Please try again.</string>
 
     <!-- PDF viewer -->
     <string name="pdf_open_failed">Could not open this document: %1$s</string>
     <string name="pdf_truncated">Showing the first 80 pages.</string>
-    <string name="pdf_page_of">Page %1$d of %2$d</string>
 
     <!-- Search -->
     <string name="search_empty_title">Your archive, searchable</string>
@@ -466,9 +464,7 @@
     <string name="trash_empty_summary">Nothing deleted</string>
     <string name="delete_forever_title">Delete permanently?</string>
     <string name="delete_forever_body">“%1$s” will be removed forever. This cannot be undone.</string>
-    <string name="delete_forever">Delete forever</string>
     <string name="deleted_forever">Deleted permanently</string>
-    <string name="restored">Restored</string>
 
     <!-- Storage / backup -->
     <string name="storage_used">%1$s used</string>

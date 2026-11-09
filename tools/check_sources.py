@@ -67,6 +67,27 @@ def values_entries():
     return entries
 
 
+def duplicate_values():
+    """AAPT fails the build on duplicate resource names inside values/, so treat them as errors."""
+    seen = {}
+    duplicates = []
+    for path in glob.glob(os.path.join(RES, 'values*', '*.xml')):
+        try:
+            tree = ET.parse(path)
+        except ET.ParseError:
+            continue
+        for node in tree.getroot():
+            tag = node.tag
+            if tag not in ('string', 'color', 'dimen', 'style', 'bool', 'integer', 'plurals', 'attr'):
+                continue
+            key = (tag, node.get('name'))
+            if key in seen:
+                duplicates.append((key, seen[key], os.path.relpath(path, ROOT)))
+            else:
+                seen[key] = os.path.relpath(path, ROOT)
+    return duplicates
+
+
 def layout_ids():
     ids = set()
     for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
@@ -125,6 +146,11 @@ def check():
             if (kind, name) not in available:
                 problems += 1
                 print(f'RES REF {os.path.relpath(path, ROOT)}: @{kind}/{name} not found')
+
+    # --- duplicate values resources (build-breaking)
+    for (kind, name), first, second in duplicate_values():
+        problems += 1
+        print(f'DUPLICATE {kind}/{name}: declared in {first} and {second}')
 
     # --- ids used from Java
     ids = layout_ids()
