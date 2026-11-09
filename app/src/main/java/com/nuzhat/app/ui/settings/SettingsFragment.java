@@ -188,6 +188,27 @@ public class SettingsFragment extends Fragment {
         root.findViewById(R.id.row_trash).setOnClickListener(v ->
                 startActivity(new Intent(requireActivity(), TrashActivity.class)));
 
+        TextView retentionValue = root.findViewById(R.id.value_history_retention);
+        retentionValue.setText(retentionLabel(settings.activityRetentionDays()));
+        root.findViewById(R.id.row_history_retention).setOnClickListener(v ->
+                pickRetention(root, retentionValue));
+
+        TextView historyCount = root.findViewById(R.id.value_history_count);
+        app.repo().activityCount(count -> historyCount.setText(count == 0
+                ? getString(R.string.history_empty) : getString(R.string.history_count, count)));
+        root.findViewById(R.id.row_history_clear).setOnClickListener(v -> {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.history_clear_title)
+                    .setMessage(R.string.history_clear_body)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.settings_history_clear, (d, w) ->
+                            app.repo().clearActivityHistory(() -> {
+                                historyCount.setText(R.string.history_empty);
+                                UiUtils.snack(root, getString(R.string.history_cleared));
+                            }))
+                    .show();
+        });
+
         MaterialSwitch lock = root.findViewById(R.id.switch_app_lock);
         lock.setChecked(settings.appLock());
         lock.setOnCheckedChangeListener((button, checked) -> {
@@ -203,6 +224,41 @@ public class SettingsFragment extends Fragment {
                 startActivity(new Intent(requireActivity(), LicensesActivity.class)));
 
         return root;
+    }
+
+    private String retentionLabel(int days) {
+        return days <= 0 ? getString(R.string.history_retention_forever)
+                : getString(R.string.history_retention_days, days);
+    }
+
+    /** 0 is an explicit choice here, not a missing value, so the list is built by hand. */
+    private void pickRetention(View root, TextView label) {
+        final int[] days = {0, 7, 30, 90, 365};
+        String[] labels = new String[days.length];
+        for (int i = 0; i < days.length; i++) labels[i] = retentionLabel(days[i]);
+        final int current = settings.activityRetentionDays();
+        int checked = 0;
+        for (int i = 0; i < days.length; i++) if (days[i] == current) checked = i;
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.settings_history_retention)
+                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                    int chosen = days[which];
+                    settings.setActivityRetentionDays(chosen);
+                    app.repo().activity().setRetentionDays(chosen);
+                    app.repo().trimActivityHistory(chosen, () -> {
+                        app.repo().activityCount(count -> {
+                            TextView historyCount = root.findViewById(R.id.value_history_count);
+                            historyCount.setText(count == 0 ? getString(R.string.history_empty)
+                                    : getString(R.string.history_count, count));
+                        });
+                        label.setText(retentionLabel(chosen));
+                        UiUtils.snack(root, chosen <= 0
+                                ? getString(R.string.history_retention_saved_forever)
+                                : getString(R.string.history_retention_saved, chosen));
+                    });
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void buildBackgroundSwatches(LinearLayout container) {

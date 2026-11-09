@@ -44,6 +44,13 @@ public class SettingsStore {
     public int accent() { return prefs.getInt("accent", ACCENT_OCHRE); }
     public void setAccent(int value) { prefs.edit().putInt("accent", value).apply(); }
 
+    /** 0 means "keep everything"; anything else is a number of days. */
+    public int activityRetentionDays() { return prefs.getInt("activity_retention_days", 90); }
+
+    public void setActivityRetentionDays(int days) {
+        prefs.edit().putInt("activity_retention_days", Math.max(0, days)).apply();
+    }
+
     public int homeBackground() { return prefs.getInt("home_bg", HOME_BG_PAPER); }
     public void setHomeBackground(int value) { prefs.edit().putInt("home_bg", value).apply(); }
 

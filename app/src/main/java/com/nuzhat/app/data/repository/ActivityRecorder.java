@@ -29,10 +29,16 @@ public class ActivityRecorder {
     private final ActivityDao dao;
     private final ExecutorService executor;
     private final ConcurrentHashMap<String, Long> lastKeys = new ConcurrentHashMap<>();
+    private volatile int retentionDays = 90;
 
     public ActivityRecorder(ActivityDao dao, ExecutorService executor) {
         this.dao = dao;
         this.executor = executor;
+    }
+
+    /** 0 keeps everything up to the hard ceiling; the setting is read again on every write. */
+    public void setRetentionDays(int days) {
+        this.retentionDays = Math.max(0, days);
     }
 
     public void record(@NonNull String type, @NonNull String description,
@@ -63,9 +69,12 @@ public class ActivityRecorder {
         entity.timestamp = now;
         executor.execute(() -> {
             dao.insert(entity);
-            if (dao.countSync() > KEEP_LIMIT) {
-                dao.deleteOlderThan(now - 90L * 24L * 60L * 60L * 1000L);
+            int days = retentionDays;
+            if (days > 0) {
+                dao.deleteOlderThan(now - days * 24L * 60L * 60L * 1000L);
             }
+            // A hard ceiling regardless of the setting, so a runaway gesture cannot grow the table.
+            if (dao.countSync() > KEEP_LIMIT) dao.trimTo(KEEP_LIMIT);
         });
     }
 }

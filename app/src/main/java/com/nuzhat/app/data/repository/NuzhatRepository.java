@@ -74,6 +74,30 @@ public class NuzhatRepository {
     }
 
     /** Newest-first history feed for the Activity tab. */
+    public void clearActivityHistory(Runnable done) {
+        executor.execute(() -> {
+            db.activityDao().clearAll();
+            if (done != null) main.post(done);
+        });
+    }
+
+    public void activityCount(Callback<Integer> callback) {
+        executor.execute(() -> {
+            final int count = db.activityDao().countSync();
+            main.post(() -> callback.onResult(count));
+        });
+    }
+
+    public void trimActivityHistory(int days, Runnable done) {
+        executor.execute(() -> {
+            if (days > 0) {
+                db.activityDao().deleteOlderThan(
+                        System.currentTimeMillis() - days * 24L * 60L * 60L * 1000L);
+            }
+            if (done != null) main.post(done);
+        });
+    }
+
     public LiveData<List<ActivityEntity>> recentActivity() {
         return db.activityDao().recent();
     }

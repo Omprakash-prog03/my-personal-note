@@ -53,6 +53,7 @@ public class NuzhatApp extends Application {
         repository = new NuzhatRepository(database, fileStore, executor, mainHandler);
         canvasRepository = new CanvasRepository(database, fileStore, executor, mainHandler);
         repository.setCollectionSort(settings.collectionSort());
+        repository.activity().setRetentionDays(settings.activityRetentionDays());
         seedFirstRun();
     }
 

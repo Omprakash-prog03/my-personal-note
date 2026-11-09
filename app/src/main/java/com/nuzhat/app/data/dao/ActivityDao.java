@@ -30,6 +30,11 @@ public interface ActivityDao {
     @Query("DELETE FROM activities WHERE timestamp < :cutoff")
     int deleteOlderThan(long cutoff);
 
+    /** Keeps the newest rows only, whatever the retention setting says. */
+    @Query("DELETE FROM activities WHERE id NOT IN "
+            + "(SELECT id FROM activities ORDER BY timestamp DESC LIMIT :keep)")
+    int trimTo(int keep);
+
     @Query("DELETE FROM activities")
     void clearAll();
 }
