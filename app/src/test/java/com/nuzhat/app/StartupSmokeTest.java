@@ -123,8 +123,13 @@ public class StartupSmokeTest {
         Intent canvasIntent = new Intent(app, CanvasActivity.class)
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
-                Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
-        assertFalse("canvas crashed while inflating", canvasController.get().isFinishing());
+                Robolectric.buildActivity(CanvasActivity.class).withIntent(canvasIntent).setup();
+        String seenExtra = canvasController.get().getIntent() == null ? "<no intent>"
+                : String.valueOf(canvasController.get().getIntent()
+                        .getStringExtra(CanvasActivity.EXTRA_PAGE_ID));
+        assertFalse("canvas quit during creation (extra seen=" + seenExtra
+                        + ", page id=" + ids[1] + ")",
+                canvasController.get().isFinishing());
 
         // Let the page load resolve, then insist the canvas actually holds the document.
         long canvasDeadline = System.currentTimeMillis() + 5000;
