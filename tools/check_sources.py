@@ -111,6 +111,20 @@ def missing_content_descriptions():
     return findings
 
 
+def unbound_namespaces():
+    """XML attributes must declare their prefix (aapt fails hard otherwise)."""
+    findings = []
+    for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
+        try:
+            text = open(path).read()
+        except OSError:
+            continue
+        for prefix in ('app', 'tools', 'android'):
+            if re.search(r'\s%s:[A-Za-z]' % prefix, text) and not re.search(r'xmlns:%s\s*=' % prefix, text):
+                findings.append((os.path.relpath(path, ROOT), prefix))
+    return findings
+
+
 def layout_ids():
     ids = set()
     for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
@@ -210,6 +224,10 @@ def check():
     print(f'\nchecked {len(syntax_files)} java files '
           f'({len(test_files)} tests), '
           f'{len(glob.glob(os.path.join(RES, "**", "*.xml"), recursive=True))} xml files')
+    for path, prefix in unbound_namespaces():
+        print('ERROR: %s uses the "%s:" prefix without xmlns:%s' % (path, prefix, prefix))
+        problems += 1
+
     print('problems:', problems)
     return 1 if problems else 0
 
