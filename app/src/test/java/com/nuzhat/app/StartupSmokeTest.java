@@ -1,5 +1,6 @@
 package com.nuzhat.app;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -110,19 +111,31 @@ public class StartupSmokeTest {
             probe[0] = loaded;
             latch.countDown();
         });
-        assertTrue("repository never answered the canvas load", latch.await(5, java.util.concurrent.TimeUnit.SECONDS));
+        // main.post() needs the paused Robolectric looper pumped for the callback to run.
+        long latchDeadline = System.currentTimeMillis() + 5000;
+        while (latch.getCount() > 0 && System.currentTimeMillis() < latchDeadline) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper();
+            Thread.sleep(10);
+        }
+        assertEquals("repository never answered the canvas load", 0L, latch.getCount());
         assertNotNull("canvas repository could not read the page it was given", probe[0].page);
 
         Intent canvasIntent = new Intent(app, CanvasActivity.class)
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
                 Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
-        // Assert before pumping the looper: inflation and onCreate are what a real launch crash
-        // comes from. The asynchronous page load resolves later and depends on executor timing,
-        // which is device territory rather than something Robolectric models faithfully.
-        assertFalse("canvas crashed while inflating",
-                canvasController.get().isFinishing());
-        org.robolectric.shadows.ShadowLooper.idleMainLooper();
+        assertFalse("canvas crashed while inflating", canvasController.get().isFinishing());
+
+        // Let the page load resolve, then insist the canvas actually holds the document.
+        long canvasDeadline = System.currentTimeMillis() + 5000;
+        com.nuzhat.app.canvas.engine.CanvasView canvasView =
+                canvasController.get().findViewById(R.id.canvas_view);
+        while (canvasView.document() == null && System.currentTimeMillis() < canvasDeadline) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper();
+            Thread.sleep(10);
+        }
+        assertNotNull("canvas never received its document", canvasView.document());
+        assertFalse("canvas closed after loading its page", canvasController.get().isFinishing());
     }
 
     @Test
