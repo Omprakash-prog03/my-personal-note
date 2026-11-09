@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.archive.app.data.entity.CanvasElementEntity;
+import com.archive.app.utils.PickerRequest;
 import com.archive.app.data.entity.CollectionEntity;
 import com.archive.app.data.entity.MediaEntity;
 import com.archive.app.data.entity.PageEntity;
@@ -122,8 +123,7 @@ public class MainActivity extends com.archive.app.ui.common.BaseActivity impleme
 
     @Override
     public void requestImportMedia() {
-        importPicker.launch(new PickVisualMediaRequest.Builder()
-                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build());
+        importPicker.launch(PickerRequest.images());
     }
 
     /** Imports chosen images straight into a fresh page so nothing is lost if the user backs out. */
