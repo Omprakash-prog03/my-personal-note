@@ -179,6 +179,7 @@ home background style, all resolved through theme attributes so no screen hardco
 | 5 Persistence | Room, repositories, autosave, recovery, backup | ✅ |
 | 6 Personal archive | research, journal, library, search, tags | ✅ |
 | 7 Finishing | export PNG/JPEG/PDF, share, performance, a11y, tests | ✅ (device-level QA pending your build) |
+| 8 Access | local PBKDF2 account, change password, sign out, throttling | ✅ (device-level QA pending your build) |
 
 ## 10. Technical risks and mitigations
 
@@ -200,3 +201,45 @@ home background style, all resolved through theme attributes so no screen hardco
 download them, so the project could not be compiled here. Java syntax is validated with a
 tree-sitter parse and every resource reference is cross-checked by script; the Gradle build
 must be run in Android Studio (§31/§32.13).
+
+## 11. Local authentication
+
+The spec asks for an offline personal app, and the owner asked for a sign-in screen. Those two
+requirements meet in a **local-only account** rather than a network identity.
+
+**Flow**
+
+```
+LoginActivity (launcher, exported)
+   |  username + password
+   v
+AuthStore.verify()  ->  PasswordHasher.matches()   [PBKDF2-HMAC-SHA256, 120k rounds, per-account salt]
+   |  success
+   v
+AuthStore.signIn(keepSignedIn)  ->  session flag (memory, optionally persisted)
+   |
+   v
+MainActivity (exported = false)  ->  tabs, archive
+```
+
+**Design decisions**
+
+| Decision | Reason |
+|---|---|
+| PBKDF2-HMAC-SHA256, 120,000 iterations, 256-bit key, 16-byte random salt | Slow enough to resist offline guessing, available on every API 26+ device without extra dependencies |
+| Only salt + derived key persisted (hex) in a private `SharedPreferences` file | No plaintext password on disk; no new database surface |
+| Constant-time comparison (`MessageDigest.isEqual`) | Avoid timing side channels when comparing hashes |
+| Derivation runs on the app executor | Keeps the UI responsive; the button shows a progress bar instead of freezing |
+| In-memory session by default, persisted only with "Keep me signed in" | Closing the app requires a password unless the user opts out |
+| Five failures then a 30-second pause | Deters shoulder-surfing/brute force without locking the owner out permanently |
+| Password change requires the current password; minimum 6 chars | Prevents a walk-up change of credentials |
+| No reset flow | With no server, any reset would be a bypass. Recovery is documented as "clear app data" |
+| Login and biometric lock are independent | Login gates the archive; biometrics optionally gates resume when the app returns to the foreground |
+
+**Files:** `domain/security/PasswordHasher.java`, `data/preferences/AuthStore.java`,
+`ui/auth/LoginActivity.java`, `ui/auth/AccountDialogs.java`, `res/layout/activity_login.xml`,
+account card in `res/layout/fragment_settings.xml`. Tests:
+`app/src/test/java/com/archive/app/domain/security/PasswordHasherTest.java`.
+
+**Limitation:** there is one local account and no per-device user switching; the session flag is not
+encrypted beyond the OS-level app sandbox.

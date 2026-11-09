@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Archive.Warm">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".ui.collections.CollectionActivity" android:windowSoftInputMode="adjustResize" />
         <activity

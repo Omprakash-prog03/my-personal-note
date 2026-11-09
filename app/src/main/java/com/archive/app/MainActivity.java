@@ -50,6 +50,12 @@ public class MainActivity extends com.archive.app.ui.common.BaseActivity impleme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // The archive is gated by the local account; without a session there is nothing to show.
+        if (!new com.archive.app.data.preferences.AuthStore(this).isSignedIn()) {
+            startActivity(new Intent(this, com.archive.app.ui.auth.LoginActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
 
         bottomNav = findViewById(R.id.bottom_nav);

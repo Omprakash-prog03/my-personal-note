@@ -22,6 +22,9 @@ import androidx.work.WorkManager;
 
 import com.archive.app.ArchiveApp;
 import com.archive.app.R;
+import com.archive.app.data.preferences.AuthStore;
+import com.archive.app.ui.auth.AccountDialogs;
+import com.archive.app.ui.auth.LoginActivity;
 import com.archive.app.data.entity.PageFormat;
 import com.archive.app.data.storage.BackupManager;
 import com.archive.app.ui.common.ItemDialogs;
@@ -32,6 +35,7 @@ import com.archive.app.utils.UiUtils;
 import com.archive.app.utils.ThemeController;
 import com.archive.app.workers.BackupWorker;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.io.File;
@@ -56,6 +60,27 @@ public class SettingsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
         ArchiveApp app = ArchiveApp.get(requireContext());
         settings = app.settings();
+
+        final AuthStore auth = new AuthStore(requireContext());
+        TextView account = root.findViewById(R.id.account_username);
+        account.setText(getString(R.string.account_signed_in_as, auth.username()));
+        root.findViewById(R.id.row_change_password).setOnClickListener(v ->
+                AccountDialogs.changePassword(requireActivity(), auth,
+                        () -> UiUtils.snack(root, getString(R.string.password_updated))));
+        root.findViewById(R.id.row_sign_out).setOnClickListener(v ->
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.account_sign_out_title)
+                        .setMessage(R.string.account_sign_out_body)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.account_sign_out, (dialog, which) -> {
+                            auth.signOut();
+                            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            requireActivity().finishAffinity();
+                        })
+                        .show());
 
         restorePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                 uri -> {

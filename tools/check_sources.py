@@ -90,8 +90,11 @@ def check():
         print('WARN: tree-sitter-java not installed, skipping syntax check:', exc)
 
     java_files = sorted(glob.glob(os.path.join(JAVA, '**', '*.java'), recursive=True))
+    test_files = sorted(glob.glob(os.path.join(ROOT, 'app/src/test/java', '**', '*.java'),
+                                  recursive=True))
+    syntax_files = java_files + test_files
     if parser:
-        for path in java_files:
+        for path in syntax_files:
             src = open(path, 'rb').read()
             tree = parser.parse(src)
             stack = [tree.root_node]
@@ -148,7 +151,9 @@ def check():
                 problems += 1
                 print(f'JAVA RES {os.path.relpath(path, ROOT)}: R.{kind}.{name} not found')
 
-    print(f'\nchecked {len(java_files)} java files, {len(glob.glob(os.path.join(RES, "**", "*.xml"), recursive=True))} xml files')
+    print(f'\nchecked {len(syntax_files)} java files '
+          f'({len(test_files)} tests), '
+          f'{len(glob.glob(os.path.join(RES, "**", "*.xml"), recursive=True))} xml files')
     print('problems:', problems)
     return 1 if problems else 0
 
