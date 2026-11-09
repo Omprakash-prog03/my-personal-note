@@ -49,6 +49,9 @@ public class CanvasView extends View {
         /** Single tap or long press on an object — the activity shows its contextual toolbar. */
         void onObjectTapped(CanvasElement element, boolean longPress);
 
+        /** Fired once when a drag/resize/rotate gesture completes, with a human-readable label. */
+        void onTransformCommitted(String label);
+
         /** Tap on empty paper with the text tool. */
         void onEmptyTextPlacement(float docX, float docY);
 
@@ -108,6 +111,10 @@ public class CanvasView extends View {
 
             @Override public void onObjectTapped(CanvasElement element, boolean longPress) {
                 if (listener != null) listener.onObjectTapped(element, longPress);
+            }
+
+            @Override public void onTransformCommitted(String label) {
+                if (listener != null) listener.onTransformCommitted(label);
             }
 
             @Override public void onEmptyTextPlacement(float docX, float docY) {

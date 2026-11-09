@@ -297,6 +297,24 @@ public class CanvasActivity extends BaseActivity implements CanvasView.Listener,
         if (longPress) showElementMenu(element);
     }
 
+    /**
+     * One history row when the user lets go, not one per frame: the gesture is meaningless until it
+     * ends, and the recorder's time window folds a quick second nudge into the same entry.
+     */
+    @Override
+    public void onTransformCommitted(String label) {
+        CanvasDocument document = canvasView.document();
+        if (document == null) return;
+        String type = "Resize object".equals(label) ? ActivityEntity.OBJECT_RESIZED
+                : "Rotate object".equals(label) ? ActivityEntity.OBJECT_ROTATED
+                : ActivityEntity.OBJECT_MOVED;
+        List<CanvasElement> selection = canvasView.selection().elements(document);
+        String objectId = selection.isEmpty() ? null : selection.get(0).id;
+        String what = selection.isEmpty() ? label : label + " \u2014 " + selection.get(0).label();
+        app.repo().activity().record(type, what + " on \"" + document.title + "\"",
+                null, pageId, objectId);
+    }
+
     @Override
     public void onEmptyTextPlacement(float docX, float docY) {
         TextElement text = new TextElement();

@@ -54,6 +54,9 @@ public class CanvasTouchHandler {
         void onRequestInvalidate();
 
         void onInvalidateRegion(float left, float top, float right, float bottom);
+
+        /** A drag, resize or rotate gesture finished and became one undoable command. */
+        void onTransformCommitted(String label);
     }
 
     private static final int MODE_NONE = 0;
@@ -521,10 +524,13 @@ public class CanvasTouchHandler {
         }
         for (CanvasElement element : transformTargets) document.markDirty(element);
         document.touch();
-        TransformCommand command = new TransformCommand(document, transformTargets, transformBefore,
-                mode == MODE_SCALE ? "Resize object" : mode == MODE_ROTATE ? "Rotate object" : "Move object");
+        String label = mode == MODE_SCALE ? "Resize object"
+                : mode == MODE_ROTATE ? "Rotate object" : "Move object";
+        TransformCommand command = new TransformCommand(document, transformTargets, transformBefore, label);
         document.history.record(command);
         listener.onDocumentChanged();
+        // Only now, at the end of the gesture, is it a completed action worth a history row.
+        listener.onTransformCommitted(label);
         mode = MODE_NONE;
         transformBefore = null;
         transformTargets.clear();
