@@ -3,7 +3,6 @@ name: Build installable APK
 on:
   push:
     branches: ['**']
-    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -18,46 +17,65 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
+      # ubuntu-latest already ships the Android SDK; only the platform and build
+      # tools matter. sdkmanager is not always on PATH, so fall back to the SDK dir.
       - name: Install platform 35 and build tools
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0" > /dev/null
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "Using SDK at $SDK"
+          SDKMANAGER="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          [ -x "$SDKMANAGER" ] || SDKMANAGER="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMANAGER" ]; then echo "sdkmanager not found" >&2; exit 1; fi
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0" > /dev/null
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Assemble debug APK
-        run: ./gradlew --no-daemon --stacktrace assembleDebug
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleDebug 2>&1 | tee build.log
+
+      # Log downloads are not always reachable, so surface the errors on the commit.
+      - name: Report build errors on the commit
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY' > /tmp/body.md
+          log = open('build.log', errors='replace').read()
+          tail = "\n".join(log.splitlines()[-150:])
+          print("Gradle build failed. Last 150 lines:\n\n```\n" + tail[-60000:] + "\n```")
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" -f body=@/tmp/body.md || true
 
       - name: Upload APK as workflow artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      # A release asset is publicly downloadable, unlike a workflow artifact
-      # which needs a GitHub login. This is the file you tap on the phone.
-      - name: Publish APK to the "apk-latest" release
+      # Release assets are public downloads; workflow artifacts need a login.
+      # This release file is what you tap on the phone.
+      - name: Publish APK to the apk-latest release
         if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          APP=app/build/outputs/apk/debug/app-debug.apk
-          cp "$APP" ARCHIVE-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ARCHIVE-debug.apk
           gh release view apk-latest >/dev/null 2>&1 \
             || gh release create apk-latest \
                  --title "ARCHIVE — latest debug build" \
-                 --notes "Debug APK built automatically from \`${{ github.sha }}\` on $(date -u +%Y-%m-%d). Tap the APK on your phone to install."
+                 --notes "Debug APK built automatically from commit ${{ github.sha }}. Tap the APK on your phone to install."
           gh release upload apk-latest ARCHIVE-debug.apk --clobber
