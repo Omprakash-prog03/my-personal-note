@@ -8,6 +8,10 @@ on the device.
 
 ---
 
+## Build & install
+
+See **[INSTALL.md](INSTALL.md)** for phone installation (APK build, sideloading, troubleshooting).
+
 ## Build
 
 ```
