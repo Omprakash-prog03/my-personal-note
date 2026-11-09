@@ -11,7 +11,7 @@ public final class UiKit {
     private UiKit() {}
 
     public static int ink(Context context) {
-        return ThemeController.themeColor(context, androidx.appcompat.R.attr.colorOnSurface);
+        return ThemeController.themeColor(context, com.google.android.material.R.attr.colorOnSurface);
     }
 
     public static int surface(Context context) {
@@ -27,7 +27,7 @@ public final class UiKit {
     }
 
     public static int outline(Context context) {
-        return ThemeController.themeColor(context, androidx.appcompat.R.attr.colorOutline);
+        return ThemeController.themeColor(context, com.google.android.material.R.attr.colorOutline);
     }
 
     /** Canvas palette for screens that render pages without a live CanvasView (exports, PDFs). */

@@ -63,6 +63,7 @@ jobs:
           for i, line in enumerate(lines):
               if any(m in line for m in matchers) or re.match(r'\s+\S+\.java:\d+: ', line):
                   keep.append(line)
+                  keep.extend(lines[i + 1:i + 4])  # symbol:, location:, source line
           body = "Gradle build failed.\n\nFiltered output:\n\n```\n" + "\n".join(keep[:400])[-50000:]
           body += "\n```\n\nLast 60 lines:\n\n```\n" + "\n".join(lines[-60:])[-8000:] + "\n```"
           json.dump({"body": body}, open('/tmp/payload.json', 'w'))
