@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- =========================================================
+         THEME A — WARM ARCHIVE
+         ========================================================= -->
+    <style name="Theme.Archive.Warm" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent_ochre</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/accent_ochre_soft</item>
+        <item name="colorOnPrimaryContainer">#FF3A2A18</item>
+        <item name="colorSecondary">@color/accent_ochre</item>
+        <item name="colorSecondaryContainer">@color/accent_ochre_soft</item>
+        <item name="colorOnSecondaryContainer">#FF3A2A18</item>
+        <item name="colorSurface">@color/warm_surface</item>
+        <item name="colorSurfaceVariant">@color/warm_surface_variant</item>
+        <item name="colorOnSurface">@color/warm_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/warm_on_surface_variant</item>
+        <item name="colorOutline">@color/warm_outline</item>
+        <item name="colorControlNormal">@color/warm_on_surface_variant</item>
+        <item name="android:colorBackground">@color/warm_background</item>
+        <item name="colorOnBackground">@color/warm_on_surface</item>
+        <item name="android:windowBackground">@color/warm_background</item>
+        <item name="android:statusBarColor">@color/warm_background</item>
+        <item name="android:navigationBarColor">@color/warm_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+
+        <item name="archiveBackdrop">@color/warm_backdrop</item>
+        <item name="archiveSelection">@color/warm_selection</item>
+        <item name="archiveHandleFill">@color/warm_surface</item>
+        <item name="archiveMuted">@color/warm_muted</item>
+        <item name="archiveRule">@color/warm_rule</item>
+        <item name="archivePaper">@color/warm_paper</item>
+        <item name="archivePaperInk">@color/warm_paper_ink</item>
+        <item name="archiveCardTint">@color/warm_card_tint</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Archive.Display</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Archive.Headline</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Archive.Title</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Archive.Body</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Archive.Label</item>
+        <item name="materialCardViewStyle">@style/Widget.Archive.Card</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Archive.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Archive.Large</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Archive.Small</item>
+    </style>
+
+    <!-- =========================================================
+         THEME B — MODERN MINIMAL
+         ========================================================= -->
+    <style name="Theme.Archive.Minimal" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent_slate</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/accent_slate_soft</item>
+        <item name="colorOnPrimaryContainer">#FF1E2430</item>
+        <item name="colorSecondary">@color/accent_slate</item>
+        <item name="colorSecondaryContainer">@color/accent_slate_soft</item>
+        <item name="colorOnSecondaryContainer">#FF1E2430</item>
+        <item name="colorSurface">@color/min_surface</item>
+        <item name="colorSurfaceVariant">@color/min_surface_variant</item>
+        <item name="colorOnSurface">@color/min_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/min_on_surface_variant</item>
+        <item name="colorOutline">@color/min_outline</item>
+        <item name="colorControlNormal">@color/min_on_surface_variant</item>
+        <item name="android:colorBackground">@color/min_background</item>
+        <item name="colorOnBackground">@color/min_on_surface</item>
+        <item name="android:windowBackground">@color/min_background</item>
+        <item name="android:statusBarColor">@color/min_background</item>
+        <item name="android:navigationBarColor">@color/min_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+
+        <item name="archiveBackdrop">@color/min_backdrop</item>
+        <item name="archiveSelection">@color/min_selection</item>
+        <item name="archiveHandleFill">@color/white</item>
+        <item name="archiveMuted">@color/min_muted</item>
+        <item name="archiveRule">@color/min_rule</item>
+        <item name="archivePaper">@color/min_paper</item>
+        <item name="archivePaperInk">@color/min_paper_ink</item>
+        <item name="archiveCardTint">@color/min_card_tint</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Archive.Display</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Archive.Headline</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Archive.Title</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Archive.Body</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Archive.Label</item>
+        <item name="materialCardViewStyle">@style/Widget.Archive.Card.Outlined</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Archive.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Archive.Large</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Archive.Small</item>
+    </style>
+
+    <!-- =========================================================
+         THEME C — DARK ACADEMIC
+         ========================================================= -->
+    <style name="Theme.Archive.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/accent_ochre</item>
+        <item name="colorOnPrimary">#FF241B10</item>
+        <item name="colorPrimaryContainer">#FF4A3520</item>
+        <item name="colorOnPrimaryContainer">#FFF6E3C8</item>
+        <item name="colorSecondary">@color/accent_ochre</item>
+        <item name="colorSecondaryContainer">#FF3E3222</item>
+        <item name="colorOnSecondaryContainer">#FFF6E3C8</item>
+        <item name="colorSurface">@color/dark_surface</item>
+        <item name="colorSurfaceVariant">@color/dark_surface_variant</item>
+        <item name="colorOnSurface">@color/dark_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/dark_on_surface_variant</item>
+        <item name="colorOutline">@color/dark_outline</item>
+        <item name="colorControlNormal">@color/dark_on_surface_variant</item>
+        <item name="android:colorBackground">@color/dark_background</item>
+        <item name="colorOnBackground">@color/dark_on_surface</item>
+        <item name="android:windowBackground">@color/dark_background</item>
+        <item name="android:statusBarColor">@color/dark_background</item>
+        <item name="android:navigationBarColor">@color/dark_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+
+        <item name="archiveBackdrop">@color/dark_backdrop</item>
+        <item name="archiveSelection">@color/dark_selection</item>
+        <item name="archiveHandleFill">@color/dark_surface</item>
+        <item name="archiveMuted">@color/dark_muted</item>
+        <item name="archiveRule">@color/dark_rule</item>
+        <item name="archivePaper">@color/dark_paper</item>
+        <item name="archivePaperInk">@color/dark_paper_ink</item>
+        <item name="archiveCardTint">@color/dark_card_tint</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Archive.Display</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Archive.Headline</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Archive.Title</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Archive.Body</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Archive.Label</item>
+        <item name="materialCardViewStyle">@style/Widget.Archive.Card</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Archive.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Archive.Large</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Archive.Small</item>
+    </style>
+
+    <!-- Camera uses a dark chrome regardless of archive theme -->
+    <style name="Theme.Archive.Camera" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSurface">#FF141414</item>
+        <item name="colorOnSurface">@color/white</item>
+    </style>
+
+    <!-- =========================================================
+         ACCENT OVERLAYS (applied at runtime via theme.applyStyle)
+         ========================================================= -->
+    <style name="ThemeOverlay.Archive.Accent.Ochre" parent="">
+        <item name="colorPrimary">@color/accent_ochre</item>
+        <item name="colorSecondary">@color/accent_ochre</item>
+        <item name="colorPrimaryContainer">@color/accent_ochre_soft</item>
+    </style>
+    <style name="ThemeOverlay.Archive.Accent.Indigo" parent="">
+        <item name="colorPrimary">@color/accent_indigo</item>
+        <item name="colorSecondary">@color/accent_indigo</item>
+        <item name="colorPrimaryContainer">@color/accent_indigo_soft</item>
+    </style>
+    <style name="ThemeOverlay.Archive.Accent.Sage" parent="">
+        <item name="colorPrimary">@color/accent_sage</item>
+        <item name="colorSecondary">@color/accent_sage</item>
+        <item name="colorPrimaryContainer">@color/accent_sage_soft</item>
+    </style>
+    <style name="ThemeOverlay.Archive.Accent.Clay" parent="">
+        <item name="colorPrimary">@color/accent_clay</item>
+        <item name="colorSecondary">@color/accent_clay</item>
+        <item name="colorPrimaryContainer">@color/accent_clay_soft</item>
+    </style>
+    <style name="ThemeOverlay.Archive.Accent.Rose" parent="">
+        <item name="colorPrimary">@color/accent_rose</item>
+        <item name="colorSecondary">@color/accent_rose</item>
+        <item name="colorPrimaryContainer">@color/accent_rose_soft</item>
+    </style>
+    <style name="ThemeOverlay.Archive.Accent.Slate" parent="">
+        <item name="colorPrimary">@color/accent_slate</item>
+        <item name="colorSecondary">@color/accent_slate</item>
+        <item name="colorPrimaryContainer">@color/accent_slate_soft</item>
+    </style>
+
+</resources>

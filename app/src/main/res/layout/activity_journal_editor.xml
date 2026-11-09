@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:menu="@menu/menu_journal"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/create_journal"
+        app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/entry_date"
+                style="@style/Widget.Archive.SectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/entry_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:fontFamily="serif"
+                android:hint="@string/journal_hint_title"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLines="2"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/journal_mood"
+                style="@style/Widget.Archive.SectionLabel" />
+
+            <LinearLayout
+                android:id="@+id/mood_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal" />
+
+            <EditText
+                android:id="@+id/entry_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@string/journal_hint_body"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lineSpacingMultiplier="1.35"
+                android:minHeight="320dp"
+                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/archiveMuted"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

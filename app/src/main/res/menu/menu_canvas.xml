@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_undo" android:icon="@drawable/ic_undo" android:title="@string/undo" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_redo" android:icon="@drawable/ic_redo" android:title="@string/redo" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_layers" android:icon="@drawable/ic_layers" android:title="@string/layers" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_background" android:icon="@drawable/ic_palette" android:title="@string/background" app:showAsAction="never" />
+    <item android:id="@+id/action_export" android:icon="@drawable/ic_export" android:title="@string/export" app:showAsAction="never" />
+    <item android:id="@+id/action_share" android:icon="@drawable/ic_share" android:title="@string/share" app:showAsAction="never" />
+    <item android:id="@+id/action_page_setup" android:icon="@drawable/ic_edit" android:title="@string/page_options" app:showAsAction="never" />
+    <item android:id="@+id/action_favourite_page" android:icon="@drawable/ic_heart" android:title="@string/favourite" app:showAsAction="never" />
+</menu>

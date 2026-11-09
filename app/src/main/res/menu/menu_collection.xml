@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_rename" android:title="@string/rename" app:showAsAction="never" />
+    <item android:id="@+id/action_cover" android:title="@string/change_cover" app:showAsAction="never" />
+    <item android:id="@+id/action_favourite" android:title="@string/favourite" app:showAsAction="never" />
+    <item android:id="@+id/action_pin" android:title="@string/pin" app:showAsAction="never" />
+    <item android:id="@+id/action_duplicate" android:title="@string/duplicate" app:showAsAction="never" />
+    <item android:id="@+id/action_export_collection" android:title="@string/export_collection" app:showAsAction="never" />
+    <item android:id="@+id/action_export_pages" android:title="@string/export_pages" app:showAsAction="never" />
+    <item android:id="@+id/action_delete" android:title="@string/move_to_trash" app:showAsAction="never" />
+</menu>

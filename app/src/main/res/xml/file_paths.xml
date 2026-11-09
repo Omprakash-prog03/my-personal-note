@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="archive_exports" path="archive/exports/" />
+    <files-path name="archive_backups" path="archive/backups/" />
+    <files-path name="archive_media" path="archive/media/" />
+    <cache-path name="archive_cache" path="." />
+</paths>
