@@ -3,8 +3,16 @@ package com.archive.app;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import android.content.Intent;
+
+import com.archive.app.data.entity.CollectionEntity;
+import com.archive.app.data.entity.PageEntity;
 import com.archive.app.data.preferences.AuthStore;
+import com.archive.app.domain.model.PageFormat;
 import com.archive.app.ui.auth.LoginActivity;
+import com.archive.app.ui.canvas.CanvasActivity;
+import com.archive.app.ui.collections.CollectionActivity;
+import com.archive.app.utils.Ids;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +40,61 @@ public class StartupSmokeTest {
         LoginActivity activity = controller.get();
         assertFalse("login screen finished during creation", activity.isFinishing());
         assertNotNull("login screen has no sign-in button", activity.findViewById(R.id.login_button));
+    }
+
+    @Test
+    public void collectionAndCanvasScreensOpen() throws Exception {
+        new AuthStore(RuntimeEnvironment.getApplication()).signIn(true);
+        ArchiveApp app = (ArchiveApp) RuntimeEnvironment.getApplication();
+
+        final String[] ids = new String[2];
+        Thread writer = new Thread(() -> {
+            long now = System.currentTimeMillis();
+            CollectionEntity collection = new CollectionEntity();
+            collection.id = Ids.newId();
+            collection.name = "Smoke collection";
+            collection.description = "";
+            collection.colour = 0xFFB08968;
+            collection.icon = "folder";
+            collection.sortOrder = 0;
+            collection.createdAt = now;
+            collection.updatedAt = now;
+            app.database().collectionDao().upsert(collection);
+
+            PageEntity page = new PageEntity();
+            page.id = Ids.newId();
+            page.collectionId = collection.id;
+            page.title = "Smoke page";
+            page.formatKey = PageFormat.A4_PORTRAIT;
+            page.mode = PageFormat.MODE_PAGE;
+            page.width = PageFormat.widthOf(PageFormat.A4_PORTRAIT);
+            page.height = PageFormat.heightOf(PageFormat.A4_PORTRAIT);
+            page.createdAt = now;
+            page.updatedAt = now;
+            app.database().pageDao().upsert(page);
+
+            ids[0] = collection.id;
+            ids[1] = page.id;
+        });
+        writer.start();
+        writer.join();
+
+        // Room refuses main-thread writes, so the fixture is written on its own thread above.
+
+        Intent collectionIntent = new Intent(app, CollectionActivity.class)
+                .putExtra(CollectionActivity.EXTRA_COLLECTION_ID, ids[0]);
+        ActivityController<CollectionActivity> collectionController =
+                Robolectric.buildActivity(CollectionActivity.class, collectionIntent).setup();
+        org.robolectric.shadows.ShadowLooper.idleMainLooper();
+        assertFalse("collection screen finished during creation",
+                collectionController.get().isFinishing());
+
+        Intent canvasIntent = new Intent(app, CanvasActivity.class)
+                .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
+        ActivityController<CanvasActivity> canvasController =
+                Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
+        org.robolectric.shadows.ShadowLooper.idleMainLooper();
+        assertFalse("canvas screen finished during creation", canvasController.get().isFinishing());
     }
 
     @Test
