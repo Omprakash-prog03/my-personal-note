@@ -1,7 +1,8 @@
-# ARCHIVE
+# NUZHAT · نزہت
 
 A personal digital museum for Android: collect photographs, notes, research and drawings in
-structured collections, then arrange them freely on a zoomable scrapbook canvas.
+structured collections — presented as chapters of an illustrated book — then arrange them freely on
+a zoomable scrapbook canvas, with every change recorded in a chronological Activity history.
 
 Offline-first. No account server, no cloud, no analytics. Everything lives in app-private storage
 on the device.
@@ -10,7 +11,7 @@ on the device.
 
 ## Build & install
 
-**Download the APK:** [ARCHIVE-debug.apk](https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/ARCHIVE-debug.apk)
+**Download the APK:** [NUZHAT-debug.apk](https://github.com/Omprakash-prog03/my-personal-note/releases/download/apk-latest/NUZHAT-debug.apk)
 — every push to this repository builds it on GitHub Actions, so no local toolchain is needed to try
 the app. Open the link on the phone, allow installs from the browser, and tap the file.
 
@@ -147,6 +148,21 @@ large binaries are never stored in SQLite.
 ---
 
 ## Feature checklist
+
+### NUZHAT identity and history
+
+| Feature | State |
+|---|---|
+| Rebrand to NUZHAT (package `com.nuzhat.app`, fresh install, dark-first theme, N monogram, نزہت) | ✅ |
+| Bottom navigation Home · Collections · Create · Activity · Settings, with search as its own screen | ✅ |
+| Editorial home: live date line, chapter cards with CHAPTER 01 numbering, cover, page count | ✅ |
+| Collection screen as a fanned page deck (ViewPager2 + transformer) with PAGE 01 markers | ✅ |
+| `activities` table with indexed action type / collection / page / timestamp | ✅ |
+| Activity recorder that collapses repeats (a drag or autosave is one entry) | ✅ |
+| Timeline with Today / Yesterday / This week / Earlier grouping, search, family chips, collection filter, tap-through | ✅ |
+| Collection created / renamed / archived / trashed / cover and page created / renamed / trashed recorded from the repository | ✅ |
+| Image import, capture, object move/resize/rotate and export entries | ⛔ not wired yet — the canvas write paths and exporters still need their recorder calls |
+| Activity history preferences in Settings (retention, clear) | ⛔ not implemented |
 
 Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on-device testing ·
 ⛔ not implemented

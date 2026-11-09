@@ -334,3 +334,44 @@ not exist in the source tree now fails the check.
 and writes the trace to app-private storage. `LoginActivity` shows the previous trace with **Copy
 details** on the next launch, so a crash on a phone without `adb` is still reportable. The file never
 leaves the device unless the user copies it.
+
+## 18. NUZHAT: identity change, chapters and the activity log
+
+**Rebrand.** The application is NUZHAT (نزہت) — package `com.nuzhat.app`, fresh install, so no
+migration from the old `com.archive.app` data was needed or attempted. Database, preference files and
+the media root all live under the new identity (`nuzhat.db`, `nuzhat_auth`, `nuzhat_settings`,
+`filesDir/nuzhat`). The theme family, attributes and the composition root followed
+(`Theme.Nuzhat.*`, `nuzhatMuted`…, `NuzhatApp`). The dark theme is now the default; Warm and Minimal
+remain in Settings.
+
+**Home as chapters.** Collections render as tall chapter plates (`item_chapter.xml`) in a horizontal
+rail, numbered `CHAPTER 01`, with cover, description and page count. The header shows the device date
+(`DateFormats.fullDate()`), so it updates on every resume without a timer.
+
+**Collection as a deck.** `CollectionActivity` uses a `ViewPager2` with `FanPageTransformer`: the
+active page sits square while neighbours translate, tilt and shrink. Page previews keep 1:1
+touch targets and long-press still opens the page menu.
+
+**Activity log.** `activities` is a first-class table:
+
+| Column | Purpose |
+|---|---|
+| `id` | UUID |
+| `actionType` | e.g. `PAGE_RENAMED`; `family()` maps it to a filter chip |
+| `description` | ready to display, denormalised at write time so history survives renames |
+| `collectionId`, `pageId`, `objectId` | nullable links for tap-through |
+| `timestamp` | indexed; the timeline groups by local day |
+| `metadataJson` | reserved for structured detail |
+
+`ActivityRecorder` is the single writer. It runs on the background executor, and it drops repeat
+events for the same target inside a window (1.5 s general, 5 minutes for page edits) so a drag, a
+slider or a debounce burst produces one entry, not hundreds. Writers today: collection created /
+renamed / archived / restored / trashed / cover, page created / renamed / trashed. The canvas and the
+exporters still need their calls (`docs` and the README checklist say so explicitly).
+
+Events are emitted by the repository, not by the UI, so an action that failed to persist cannot
+appear in history. The timeline never invents rows: it starts empty on a fresh install.
+
+**Known test gap.** Under Robolectric the canvas reports “page missing” for a page the same test can
+read, so the smoke test asserts canvas inflation only; the asynchronous load needs a device. As a
+safety net `CanvasViewModel` retries the read once and logs a final miss.
