@@ -542,4 +542,19 @@
     <string name="template_research">Research notes</string>
     <string name="template_quote">Quote card</string>
     <string name="template_index">Index page</string>
+
+    <!-- Image crop -->
+    <string name="flip_h">Flip horizontal</string>
+    <string name="flip_v">Flip vertical</string>
+    <string name="crop_square">Crop 1:1</string>
+    <string name="crop_four_five">Crop 4:5</string>
+    <string name="crop_sixteen_nine">Crop 16:9</string>
+    <string name="crop_edges">Crop edges (%)</string>
+    <string name="crop_left">Left</string>
+    <string name="crop_top">Top</string>
+    <string name="crop_right">Right</string>
+    <string name="crop_bottom">Bottom</string>
+    <string name="reset_crop">Reset crop</string>
+
+    <string name="canvas_save_failed">Unable to save — Retry</string>
 </resources>

@@ -17,7 +17,8 @@ compileSdk / targetSdk 35           •  minSdk 26 (Android 8.0)
 
 ```bash
 ./gradlew assembleDebug          # app/build/outputs/apk/debug/app-debug.apk
-./gradlew testDebugUnitTest      # JVM unit tests (password hashing, page geometry)
+./gradlew testDebugUnitTest          # JVM unit tests (hashing, ids, page geometry)
+./gradlew connectedDebugAndroidTest  # Room + canvas + export tests (device required)
 ./gradlew installDebug           # install on a connected device / emulator
 python3 tools/check_sources.py   # offline syntax + resource-reference check (no SDK needed)
 ```
@@ -130,6 +131,8 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Collection detail: rename, cover, favourite, pin, duplicate, delete, PDF export | 🧪 |
 | Multi-page PDF export with page picker (select all, ordered output) | 🧪 |
 | Page templates: blank, journal, research notes, quote card, index | ✅ |
+| Image crop: aspect presets from source pixels + per-edge crop sliders | ✅ |
+| Export picker with page thumbnails and select-all | 🧪 |
 | Page creation: format + paper preset picker + page/infinite modes | ✅ |
 | Page duplicate (fresh ids, transactional) and reorder within a collection | ✅ |
 | Collection sorting: recently edited / alphabetical / custom order | ✅ |
@@ -150,7 +153,7 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Biometric / device-credential app lock | 🧪 |
 | Backup (WorkManager zip) and staged restore | 🧪 |
 | JVM unit tests (password hashing, page geometry, id generation) | ✅ |
-| Room / canvas / export instrumented tests | ⛔ (see limitations) |
+| Instrumented tests: Room persistence/cascade/transactions, canvas document, crop maths, export render | 🧪 (device required) |
 | Cloud sync, accounts, subscriptions, analytics, ads | ⛔ (deliberately out of scope) |
 
 "Statically verified" means the code parses and every resource reference resolves. This sandbox has
@@ -176,12 +179,15 @@ device pass.
 
 1. **Not compiled in this environment.** No JDK/Android SDK is available; validation is a
    tree-sitter syntax pass plus full resource-reference checks (`tools/check_sources.py`, 0
-   problems across 107 Java files (3 test classes) and 115 XML files). Expect to fix ordinary compile issues on the
+   problems across 112 Java files (7 test classes) and 117 XML files). Expect to fix ordinary compile issues on the
    first Gradle build.
-2. `CanvasViewModel.save()` clears its dirty flags before the write callback, so a failed database
-   write is not retried automatically (the recovery snapshot still exists, so no work is lost).
+2. Autosave distinguishes success from failure: a failed batch keeps the affected changes dirty,
+   shows "Unable to save — Retry", and retries after two seconds. Only ids actually written (and not
+   edited mid-write) are un-dirtied. This retry path is statically verified, not device-tested.
 3. Restore intentionally restarts the process; that path is untested on-device.
-4. Instrumented Room/canvas/export tests are not written yet; only JVM unit tests are present.
+4. Instrumented tests live in `app/src/androidTest` (Room persistence, cascade delete, soft-delete
+   filtering, transactions, canvas hydration/grouping/undo, image crop maths, export rendering). They
+   need a connected device (`connectedDebugAndroidTest`) and have not been run here.
 5. Password recovery is impossible by design (local-only account). Back up before changing
    credentials.
 
