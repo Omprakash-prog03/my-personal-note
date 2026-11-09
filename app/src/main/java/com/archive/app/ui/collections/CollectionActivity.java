@@ -154,6 +154,10 @@ public class CollectionActivity extends BaseActivity {
             exportCollection();
             return true;
         }
+        if (id == R.id.action_export_pages) {
+            exportSelectedPages();
+            return true;
+        }
         if (id == R.id.action_delete) {
             UiUtils.confirm(this, getString(R.string.delete_collection_title),
                     getString(R.string.delete_collection_body, collection.name),
@@ -232,26 +236,87 @@ public class CollectionActivity extends BaseActivity {
 
     /** Renders every page and writes one PDF — the "organized export" for a collection. */
     private void exportCollection() {
-        UiUtils.snack(recycler, getString(R.string.export_working));
         app.repo().pagesSync(collectionId, pages -> {
             if (pages == null || pages.isEmpty()) {
                 UiUtils.snack(recycler, getString(R.string.export_no_pages));
                 return;
             }
-            final List<CanvasDocument> documents = new ArrayList<>();
-            final int[] remaining = {pages.size()};
-            final CanvasRenderer.Palette palette = UiKit.palette(this);
-            for (PageEntity page : pages) {
-                app.canvasRepo().load(page.id, loaded -> {
-                    if (loaded.page != null) {
-                        documents.add(CanvasDocument.fromPage(loaded.page, loaded.elements));
+            exportPages(pages);
+        });
+    }
+
+    /**
+     * Multi-page export: lets the owner tick exactly the pages they want in the PDF instead of
+     * committing to the whole collection.
+     */
+    private void exportSelectedPages() {
+        app.repo().pagesSync(collectionId, pages -> {
+            if (pages == null || pages.isEmpty()) {
+                UiUtils.snack(recycler, getString(R.string.export_no_pages));
+                return;
+            }
+            String[] titles = new String[pages.size()];
+            for (int i = 0; i < pages.size(); i++) {
+                PageEntity page = pages.get(i);
+                titles[i] = (i + 1) + ". " + (page.title == null || page.title.trim().isEmpty()
+                        ? getString(R.string.untitled_page) : page.title);
+            }
+            boolean[] checked = new boolean[pages.size()];
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.export_pages)
+                    .setMultiChoiceItems(titles, checked,
+                            (dialog, which, isChecked) -> checked[which] = isChecked)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.export, (dialog, which) -> {
+                        List<PageEntity> chosen = new ArrayList<>();
+                        for (int i = 0; i < pages.size(); i++) {
+                            if (checked[i]) chosen.add(pages.get(i));
+                        }
+                        if (chosen.isEmpty()) {
+                            UiUtils.snack(recycler, getString(R.string.no_pages_selected));
+                            return;
+                        }
+                        exportPages(chosen);
+                    })
+                    .setNeutralButton(R.string.select_all, null);
+            androidx.appcompat.app.AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(d -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)
+                    .setOnClickListener(v -> {
+                        for (int i = 0; i < pages.size(); i++) {
+                            checked[i] = true;
+                            dialog.getListView().setItemChecked(i, true);
+                        }
+                    }));
+            dialog.show();
+        });
+    }
+
+    private void exportPages(List<PageEntity> pages) {
+        UiUtils.snack(recycler, getString(R.string.export_working));
+        final List<CanvasDocument> documents = new ArrayList<>();
+        final CanvasDocument[] ordered = new CanvasDocument[pages.size()];
+        final int[] remaining = {pages.size()};
+        final CanvasRenderer.Palette palette = UiKit.palette(this);
+        for (int i = 0; i < pages.size(); i++) {
+            final int index = i;
+            PageEntity page = pages.get(i);
+            app.canvasRepo().load(page.id, loaded -> {
+                if (loaded.page != null) {
+                    // Keep the visual page order even though loads finish out of order.
+                    ordered[index] = CanvasDocument.fromPage(loaded.page, loaded.elements);
+                }
+                if (--remaining[0] == 0) {
+                    for (CanvasDocument document : ordered) {
+                        if (document != null) documents.add(document);
                     }
-                    if (--remaining[0] == 0) {
+                    if (documents.isEmpty()) {
+                        UiUtils.snack(recycler, getString(R.string.export_no_pages));
+                    } else {
                         writeCollectionPdf(documents, palette);
                     }
-                });
-            }
-        });
+                }
+            });
+        }
     }
 
     private void writeCollectionPdf(List<CanvasDocument> documents, CanvasRenderer.Palette palette) {

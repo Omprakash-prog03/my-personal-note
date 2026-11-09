@@ -128,6 +128,8 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Room v1 entities, DAOs, indexes, cascades, soft delete | ✅ |
 | Home dashboard, collections, recent pages, empty states | ✅ |
 | Collection detail: rename, cover, favourite, pin, duplicate, delete, PDF export | 🧪 |
+| Multi-page PDF export with page picker (select all, ordered output) | 🧪 |
+| Page templates: blank, journal, research notes, quote card, index | ✅ |
 | Page creation: format + paper preset picker + page/infinite modes | ✅ |
 | Page duplicate (fresh ids, transactional) and reorder within a collection | ✅ |
 | Collection sorting: recently edited / alphabetical / custom order | ✅ |

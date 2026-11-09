@@ -51,6 +51,12 @@ public final class CreateSheet {
                     dialog.dismiss();
                     newPage(activity, () -> host.onArchiveChanged());
                 }));
+        content.addView(CanvasSheetsRow(activity, R.drawable.ic_layers,
+                activity.getString(R.string.create_template),
+                activity.getString(R.string.create_template_desc), v -> {
+                    dialog.dismiss();
+                    newPageFromTemplate(activity, () -> host.onArchiveChanged());
+                }));
         content.addView(CanvasSheetsRow(activity, R.drawable.ic_journal,
                 activity.getString(R.string.create_journal),
                 activity.getString(R.string.create_journal_desc), v -> {
@@ -165,6 +171,68 @@ public final class CreateSheet {
                         openPage(activity, page);
                     });
         });
+    }
+
+    /**
+     * Template flow: collection → page format → starter. The template contributes a paper preset and
+     * a handful of editable objects; nothing is flattened and no stock imagery is inserted.
+     */
+    public static void newPageFromTemplate(Activity activity, Runnable onCreated) {
+        ArchiveApp app = ArchiveApp.get(activity);
+        app.repo().collectionsSync((List<CollectionEntity> collections) -> {
+            if (collections.isEmpty()) {
+                UiUtils.toast(activity, activity.getString(R.string.no_collection_yet));
+                newCollection(activity, onCreated);
+                return;
+            }
+            ItemDialogs.chooseCollection(activity, collections, collection ->
+                    ItemDialogs.choosePageFormat(activity, app.settings().defaultFormat(), format -> {
+                        List<com.archive.app.domain.templates.PageTemplates.Template> templates =
+                                com.archive.app.domain.templates.PageTemplates.all();
+                        String[] labels = new String[templates.size() + 1];
+                        labels[0] = activity.getString(R.string.template_blank);
+                        for (int i = 0; i < templates.size(); i++) {
+                            labels[i + 1] = activity.getString(templates.get(i).labelRes);
+                        }
+                        UiUtils.listDialog(activity, activity.getString(R.string.template_title),
+                                labels, index -> {
+                                    com.archive.app.domain.templates.PageTemplates.Template template =
+                                            index == 0
+                                                    ? com.archive.app.domain.templates.PageTemplates.blank()
+                                                    : templates.get(index - 1);
+                                    createFromTemplate(activity, collection, format, template, onCreated);
+                                });
+                    }));
+        });
+    }
+
+    private static void createFromTemplate(Activity activity, CollectionEntity collection,
+                                           String format,
+                                           com.archive.app.domain.templates.PageTemplates.Template template,
+                                           Runnable onCreated) {
+        ArchiveApp app = ArchiveApp.get(activity);
+        String title = "BLANK".equals(template.key)
+                ? activity.getString(R.string.untitled_page)
+                : activity.getString(template.labelRes);
+        app.repo().createPage(collection.id, title, format,
+                app.settings().defaultMode(), template.backgroundJson(), page -> {
+                    List<com.archive.app.domain.model.CanvasElement> elements =
+                            template.build(page.width, page.height);
+                    List<com.archive.app.data.entity.CanvasElementEntity> entities =
+                            new java.util.ArrayList<>();
+                    for (com.archive.app.domain.model.CanvasElement element : elements) {
+                        entities.add(element.toEntity(page.id));
+                    }
+                    if (entities.isEmpty()) {
+                        if (onCreated != null) onCreated.run();
+                        openPage(activity, page);
+                        return;
+                    }
+                    app.canvasRepo().addElements(page.id, entities, () -> {
+                        if (onCreated != null) onCreated.run();
+                        openPage(activity, page);
+                    });
+                });
     }
 
     public static void openPage(Activity activity, PageEntity page) {

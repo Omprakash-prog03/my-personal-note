@@ -266,3 +266,18 @@ in memory, and both Home and the Library tab update from the same source of trut
 **Creation-time paper** is a page property, not an object: `BackgroundStyleFactory.presetJson(key)`
 writes fixed preset colours into `pages.backgroundJson`, so a page keeps the paper it was created
 with even if the app theme changes later.
+
+## 13. Export selection and page templates
+
+**Multi-page export** (`CollectionActivity.exportSelectedPages`) lists the collection's pages with a
+multi-choice dialog, including a "select all" action that drives the dialog's own list view so the
+ticks stay in sync. The chosen pages are loaded concurrently but written into a pre-allocated array
+indexed by page order — concurrent loads finish out of order, and a PDF whose pages shuffle would be
+silently wrong. Empty selections produce a message instead of an empty file.
+
+**Templates** (`domain/templates/PageTemplates`) are pure builders: each starter supplies a paper
+preset plus editable objects (headings, captions, rules) laid out relative to the page size, so a
+template works on A4, square and journal formats. Nothing is flattened and no stock imagery is
+inserted — a template is a head start, not fake content. The objects are inserted through
+`CanvasRepository.addElements`, i.e. exactly the same path an imported image takes, so undo, autosave
+and export behave normally afterwards.

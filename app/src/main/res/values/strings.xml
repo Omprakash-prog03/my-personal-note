@@ -528,4 +528,18 @@
     <string name="settings_export_format">Default export format</string>
     <string name="settings_export_scale">Default export scale</string>
     <string name="export_scale_value">%1$d×</string>
+
+    <!-- Multi-page export -->
+    <string name="export_pages">Export selected pages…</string>
+    <string name="no_pages_selected">No pages selected.</string>
+
+    <!-- Page templates -->
+    <string name="create_template">Start from a template</string>
+    <string name="create_template_desc">A ready-made layout you can edit freely</string>
+    <string name="template_title">Choose a starter</string>
+    <string name="template_blank">Blank page</string>
+    <string name="template_journal">Journal page</string>
+    <string name="template_research">Research notes</string>
+    <string name="template_quote">Quote card</string>
+    <string name="template_index">Index page</string>
 </resources>
