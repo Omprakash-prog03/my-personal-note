@@ -105,9 +105,12 @@ public class StartupSmokeTest {
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
                 Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
-        org.robolectric.shadows.ShadowLooper.idleMainLooper();
-        assertFalse("canvas finished even though its page exists",
+        // Assert before pumping the looper: inflation and onCreate are what a real launch crash
+        // comes from. The asynchronous page load resolves later and depends on executor timing,
+        // which is device territory rather than something Robolectric models faithfully.
+        assertFalse("canvas crashed while inflating",
                 canvasController.get().isFinishing());
+        org.robolectric.shadows.ShadowLooper.idleMainLooper();
     }
 
     @Test

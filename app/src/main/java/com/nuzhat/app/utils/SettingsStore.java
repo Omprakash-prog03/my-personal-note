@@ -38,7 +38,7 @@ public class SettingsStore {
         prefs = context.getSharedPreferences(FILE, Context.MODE_PRIVATE);
     }
 
-    public int theme() { return prefs.getInt("theme", THEME_WARM); }
+    public int theme() { return prefs.getInt("theme", THEME_DARK); }
     public void setTheme(int value) { prefs.edit().putInt("theme", value).apply(); }
 
     public int accent() { return prefs.getInt("accent", ACCENT_OCHRE); }
