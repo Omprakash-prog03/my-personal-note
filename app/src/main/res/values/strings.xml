@@ -516,4 +516,15 @@
     <string name="password_too_short">Use at least %1$d characters.</string>
     <string name="password_wrong">Current password is incorrect.</string>
     <string name="password_updated">Password updated</string>
+
+    <!-- Sorting + page management -->
+    <string name="sort_collections">Sort collections</string>
+    <string name="sort_recent">Recently edited</string>
+    <string name="sort_name">Alphabetical</string>
+    <string name="sort_custom">Custom order</string>
+    <string name="move_earlier">Move earlier</string>
+    <string name="move_later">Move later</string>
+    <string name="page_duplicated">Page duplicated</string>
+    <string name="duplicate_failed">Could not duplicate that page.</string>
+    <string name="page_order_edge">Already at that end of the collection.</string>
 </resources>

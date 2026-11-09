@@ -59,6 +59,20 @@ public class SettingsStore {
     public boolean showGrid() { return prefs.getBoolean("grid", false); }
     public void setShowGrid(boolean value) { prefs.edit().putBoolean("grid", value).apply(); }
 
+    /** Collection ordering: recent activity, alphabetical, or the manual sortOrder column. */
+    public static final String SORT_RECENT = "RECENT";
+    public static final String SORT_NAME = "NAME";
+    public static final String SORT_CUSTOM = "CUSTOM";
+
+    public String collectionSort() {
+        return prefs.getString("collection_sort", SORT_CUSTOM);
+    }
+
+    public void setCollectionSort(String value) {
+        prefs.edit().putString("collection_sort",
+                value == null ? SORT_CUSTOM : value).apply();
+    }
+
     public boolean appLock() { return prefs.getBoolean("app_lock", false); }
     public void setAppLock(boolean value) { prefs.edit().putBoolean("app_lock", value).apply(); }
 

@@ -176,16 +176,13 @@ public class CollectionActivity extends BaseActivity {
 
     private void chooseFormatAndCreate() {
         ItemDialogs.choosePageFormat(this, settings.defaultFormat(), format ->
-                app.repo().createPage(collectionId, getString(R.string.untitled_page), format,
-                        settings.defaultMode(),
-                        com.archive.app.data.entity.BackgroundStyleFactory.defaultJson(
-                                settings.theme() == com.archive.app.utils.SettingsStore.THEME_DARK),
-                        page -> CreateSheet.openPage(this, page)));
+                CreateSheet.chooseBackgroundAndCreate(this, collectionId, format, null));
     }
 
     private void onPageLongPress(PageEntity page) {
         String[] actions = {getString(R.string.rename), getString(R.string.tags_label),
-                getString(R.string.move_to_trash)};
+                getString(R.string.duplicate), getString(R.string.move_earlier),
+                getString(R.string.move_later), getString(R.string.move_to_trash)};
         new MaterialAlertDialogBuilder(this)
                 .setTitle(page.title)
                 .setItems(actions, (dialog, which) -> {
@@ -210,6 +207,18 @@ public class CollectionActivity extends BaseActivity {
                                         for (String part : value.split(",")) names.add(part.trim());
                                         app.repo().setPageTags(page.id, names, null);
                                     });
+                        });
+                    } else if (which == 2) {
+                        app.canvasRepo().duplicatePage(page.id, copy -> {
+                            if (copy == null) {
+                                UiUtils.toast(this, getString(R.string.duplicate_failed));
+                            } else {
+                                UiUtils.snack(recycler, getString(R.string.page_duplicated));
+                            }
+                        });
+                    } else if (which == 3 || which == 4) {
+                        app.canvasRepo().movePage(page.id, which == 3 ? -1 : 1, index -> {
+                            if (index < 0) UiUtils.snack(recycler, getString(R.string.page_order_edge));
                         });
                     } else {
                         UiUtils.confirm(this, getString(R.string.delete_page_title),

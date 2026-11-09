@@ -34,6 +34,14 @@ public interface CollectionDao {
             + "FROM collections c WHERE c.trashed = 0 AND c.pinned = 1 ORDER BY c.updatedAt DESC")
     LiveData<List<CollectionWithCount>> observePinnedWithCounts();
 
+    @Query("SELECT c.*, (SELECT COUNT(*) FROM pages p WHERE p.collectionId = c.id AND p.trashed = 0) AS pageCount "
+            + "FROM collections c WHERE c.trashed = 0 ORDER BY c.pinned DESC, c.updatedAt DESC")
+    LiveData<List<CollectionWithCount>> observeWithCountsRecent();
+
+    @Query("SELECT c.*, (SELECT COUNT(*) FROM pages p WHERE p.collectionId = c.id AND p.trashed = 0) AS pageCount "
+            + "FROM collections c WHERE c.trashed = 0 ORDER BY c.pinned DESC, c.name COLLATE NOCASE ASC")
+    LiveData<List<CollectionWithCount>> observeWithCountsName();
+
     @Query("SELECT * FROM collections WHERE id = :id")
     LiveData<CollectionEntity> observe(String id);
 

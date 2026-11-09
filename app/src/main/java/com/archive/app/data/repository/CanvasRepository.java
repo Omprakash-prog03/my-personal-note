@@ -3,12 +3,16 @@ package com.archive.app.data.repository;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
+import com.archive.app.canvas.engine.CanvasDocument;
 import com.archive.app.data.database.AppDatabase;
 import com.archive.app.data.entity.CanvasElementEntity;
 import com.archive.app.data.entity.PageEntity;
 import com.archive.app.data.storage.FileStore;
+import com.archive.app.domain.model.CanvasElement;
+import com.archive.app.utils.Ids;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -52,6 +56,101 @@ public class CanvasRepository {
             db.elementDao().saveBatch(pageId, updatedAt, upserts, deletes);
             db.pageDao().touch(pageId, updatedAt);
             if (done != null) main.post(done);
+        });
+    }
+
+    /**
+     * Copies a page and all of its objects into a new row in the same collection. The copy is a real
+     * independent page: fresh ids for the page and every element, no thumbnail (it is regenerated the
+     * first time the page is opened), and its own sort order at the end of the collection.
+     */
+    public void duplicatePage(String pageId, Callback<PageEntity> callback) {
+        executor.execute(() -> {
+            PageEntity source = db.pageDao().findSync(pageId);
+            if (source == null) {
+                main.post(() -> callback.onResult(null));
+                return;
+            }
+            List<CanvasElementEntity> elements = db.elementDao().loadSync(pageId);
+            PageEntity copy = new PageEntity();
+            copy.id = Ids.newId();
+            copy.collectionId = source.collectionId;
+            copy.title = source.title + " copy";
+            copy.formatKey = source.formatKey;
+            copy.mode = source.mode;
+            copy.width = source.width;
+            copy.height = source.height;
+            copy.backgroundJson = source.backgroundJson;
+            copy.sortOrder = db.pageDao().maxSortOrder(source.collectionId) + 1;
+            copy.createdAt = System.currentTimeMillis();
+            copy.updatedAt = copy.createdAt;
+            copy.thumbnailPath = null;
+
+            List<CanvasElementEntity> copies = new ArrayList<>();
+            CanvasDocument document = CanvasDocument.fromPage(source, elements);
+            for (CanvasElement element : document.elements()) {
+                copies.add(element.duplicate().toEntity(copy.id));
+            }
+
+            db.runInTransaction(() -> {
+                db.pageDao().upsert(copy);
+                if (!copies.isEmpty()) db.elementDao().insertAll(copies);
+            });
+            main.post(() -> callback.onResult(copy));
+        });
+    }
+
+    /**
+     * Moves a page one slot earlier or later inside its collection by swapping sort orders.
+     *
+     * @return the new index, or -1 when the page is already at that end.
+     */
+    public void movePage(String pageId, int direction, Callback<Integer> callback) {
+        executor.execute(() -> {
+            PageEntity page = db.pageDao().findSync(pageId);
+            if (page == null) {
+                main.post(() -> callback.onResult(-1));
+                return;
+            }
+            List<PageEntity> siblings = db.pageDao().forCollectionSync(page.collectionId);
+            int index = -1;
+            for (int i = 0; i < siblings.size(); i++) {
+                if (siblings.get(i).id.equals(pageId)) {
+                    index = i;
+                    break;
+                }
+            }
+            int target = index + (direction < 0 ? -1 : 1);
+            if (index < 0 || target < 0 || target >= siblings.size()) {
+                main.post(() -> callback.onResult(-1));
+                return;
+            }
+            PageEntity other = siblings.get(target);
+            int mine = page.sortOrder;
+            int theirs = other.sortOrder;
+            if (mine == theirs) {
+                // Legacy rows that never got an order: rebuild it from the current visual order.
+                long now = System.currentTimeMillis();
+                for (int i = 0; i < siblings.size(); i++) {
+                    siblings.get(i).sortOrder = i;
+                    siblings.get(i).updatedAt = now;
+                }
+                db.pageDao().insertAll(siblings);
+                mine = index;
+                theirs = target;
+                page.sortOrder = mine;
+                other.sortOrder = theirs;
+            }
+            page.sortOrder = theirs;
+            other.sortOrder = mine;
+            long now = System.currentTimeMillis();
+            page.updatedAt = now;
+            db.runInTransaction(() -> {
+                db.pageDao().upsert(page);
+                db.pageDao().upsert(other);
+            });
+            final int newIndex = target;
+            main.post(() -> callback.onResult(newIndex));
         });
     }
 

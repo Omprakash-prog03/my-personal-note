@@ -134,15 +134,36 @@ public final class CreateSheet {
                 return;
             }
             ItemDialogs.chooseCollection(activity, collections, collection ->
-                    ItemDialogs.choosePageFormat(activity, app.settings().defaultFormat(), format -> {
-                        String background = BackgroundStyleFactory.defaultJson(
-                                app.settings().theme() == SettingsStore.THEME_DARK);
-                        app.repo().createPage(collection.id, activity.getString(R.string.untitled_page),
-                                format, app.settings().defaultMode(), background, page -> {
-                                    onCreated.run();
-                                    openPage(activity, page);
-                                });
-                    }));
+                    ItemDialogs.choosePageFormat(activity, app.settings().defaultFormat(), format ->
+                            chooseBackgroundAndCreate(activity, collection.id, format, onCreated)));
+        });
+    }
+
+    /**
+     * Creation-time paper picker. The chosen preset becomes the page's background property, so it is
+     * a real page setting rather than a decorative object on the canvas.
+     */
+    public static void chooseBackgroundAndCreate(Activity activity, String collectionId, String format,
+                                                 Runnable onCreated) {
+        ArchiveApp app = ArchiveApp.get(activity);
+        String[] keys = BackgroundStyleFactory.PRESET_KEYS;
+        String[] labels = {
+                activity.getString(R.string.bg_plain),
+                activity.getString(R.string.bg_ruled),
+                activity.getString(R.string.bg_grid),
+                activity.getString(R.string.bg_dots),
+                activity.getString(R.string.bg_vintage),
+                activity.getString(R.string.bg_kraft),
+                activity.getString(R.string.bg_charcoal),
+                activity.getString(R.string.bg_gradient)
+        };
+        UiUtils.listDialog(activity, activity.getString(R.string.background), labels, index -> {
+            String background = BackgroundStyleFactory.presetJson(keys[index]);
+            app.repo().createPage(collectionId, activity.getString(R.string.untitled_page), format,
+                    app.settings().defaultMode(), background, page -> {
+                        if (onCreated != null) onCreated.run();
+                        openPage(activity, page);
+                    });
         });
     }
 

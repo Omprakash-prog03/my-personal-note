@@ -128,7 +128,9 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Room v1 entities, DAOs, indexes, cascades, soft delete | ✅ |
 | Home dashboard, collections, recent pages, empty states | ✅ |
 | Collection detail: rename, cover, favourite, pin, duplicate, delete, PDF export | 🧪 |
-| Page creation with formats, backgrounds, modes | ✅ |
+| Page creation: format + paper preset picker + page/infinite modes | ✅ |
+| Page duplicate (fresh ids, transactional) and reorder within a collection | ✅ |
+| Collection sorting: recently edited / alphabetical / custom order | ✅ |
 | Canvas engine: zoom, pan, cull, selection, move, resize, rotate, marquee | ✅ |
 | 13 element types (text, image, sticky, envelope, sticker, shape, draw, document, audio, link…) | ✅ |
 | Layers: front / back / forward / backward, lock, hide, groups | ✅ |
@@ -145,7 +147,7 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Local account: salted PBKDF2 login, change password, sign out, throttling | 🧪 |
 | Biometric / device-credential app lock | 🧪 |
 | Backup (WorkManager zip) and staged restore | 🧪 |
-| JVM unit tests (password hashing, page geometry) | ✅ |
+| JVM unit tests (password hashing, page geometry, id generation) | ✅ |
 | Room / canvas / export instrumented tests | ⛔ (see limitations) |
 | Cloud sync, accounts, subscriptions, analytics, ads | ⛔ (deliberately out of scope) |
 
@@ -172,7 +174,7 @@ device pass.
 
 1. **Not compiled in this environment.** No JDK/Android SDK is available; validation is a
    tree-sitter syntax pass plus full resource-reference checks (`tools/check_sources.py`, 0
-   problems across 106 Java files and 115 XML files). Expect to fix ordinary compile issues on the
+   problems across 107 Java files (3 test classes) and 115 XML files). Expect to fix ordinary compile issues on the
    first Gradle build.
 2. `CanvasViewModel.save()` clears its dirty flags before the write callback, so a failed database
    write is not retried automatically (the recovery snapshot still exists, so no work is lost).

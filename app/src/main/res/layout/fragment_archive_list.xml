@@ -22,6 +22,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+        <ImageView
+            android:id="@+id/list_sort"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/sort_collections"
+            android:focusable="true"
+            android:padding="9dp"
+            android:src="@drawable/ic_list"
+            android:visibility="gone"
+            app:tint="?attr/archiveMuted" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/list_new"
             style="@style/Widget.Archive.TextButton"

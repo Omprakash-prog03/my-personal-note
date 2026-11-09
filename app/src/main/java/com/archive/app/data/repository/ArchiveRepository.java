@@ -58,8 +58,27 @@ public class ArchiveRepository {
 
     // ------------------------------------------------------------------ collections
 
+    /** Re-sorted whenever the user changes the ordering in the library. */
+    private final androidx.lifecycle.MutableLiveData<String> collectionSort =
+            new androidx.lifecycle.MutableLiveData<>(com.archive.app.utils.SettingsStore.SORT_CUSTOM);
+
+    public void setCollectionSort(String mode) {
+        if (mode == null) return;
+        if (!mode.equals(collectionSort.getValue())) collectionSort.setValue(mode);
+    }
+
+    public LiveData<String> collectionSort() { return collectionSort; }
+
     public LiveData<List<CollectionDao.CollectionWithCount>> collections() {
-        return db.collectionDao().observeWithCounts();
+        return androidx.lifecycle.Transformations.switchMap(collectionSort, mode -> {
+            if (com.archive.app.utils.SettingsStore.SORT_RECENT.equals(mode)) {
+                return db.collectionDao().observeWithCountsRecent();
+            }
+            if (com.archive.app.utils.SettingsStore.SORT_NAME.equals(mode)) {
+                return db.collectionDao().observeWithCountsName();
+            }
+            return db.collectionDao().observeWithCounts();
+        });
     }
 
     public LiveData<List<CollectionDao.CollectionWithCount>> pinnedCollections() {

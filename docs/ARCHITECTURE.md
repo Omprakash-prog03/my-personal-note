@@ -243,3 +243,26 @@ account card in `res/layout/fragment_settings.xml`. Tests:
 
 **Limitation:** there is one local account and no per-device user switching; the session flag is not
 encrypted beyond the OS-level app sandbox.
+
+## 12. Page and collection management
+
+**Page duplication** (`CanvasRepository.duplicatePage`) copies the page row and rebuilds every
+element through `CanvasDocument.fromPage()` → `element.duplicate().toEntity(newPageId)`. That path
+gives each object a fresh id, keeps geometry, styles, rotation and z-order, and never copies bitmaps
+(media rows are shared by reference). Page row plus elements are written inside
+`db.runInTransaction`, so a crash mid-copy cannot leave half a page. Thumbnails are deliberately not
+copied — the copy is re-rendered the first time it is opened.
+
+**Page reordering** (`movePage`) swaps `sortOrder` with the neighbour in the same collection. Legacy
+rows whose `sortOrder` values are all zero are renumbered from their current visual order first, then
+the swap runs. Attempting to move past either end returns `-1` so the UI can say so instead of
+silently doing nothing.
+
+**Collection sorting** is a `Transformations.switchMap` over a `MutableLiveData<String>` seeded from
+`SettingsStore.collectionSort()`. Three Room queries back it (`observeWithCounts` for manual order,
+`observeWithCountsRecent`, `observeWithCountsName`), so switching sort re-runs SQL rather than sorting
+in memory, and both Home and the Library tab update from the same source of truth.
+
+**Creation-time paper** is a page property, not an object: `BackgroundStyleFactory.presetJson(key)`
+writes fixed preset colours into `pages.backgroundJson`, so a page keeps the paper it was created
+with even if the app theme changes later.

@@ -89,6 +89,7 @@ public class LibraryFragment extends Fragment {
         private SimpleAdapter<T> adapter;
         protected RecyclerView recycler;
         protected View empty;
+        protected View sortButton;
 
         abstract int labelRes();
 
@@ -107,6 +108,9 @@ public class LibraryFragment extends Fragment {
             View root = inflater.inflate(R.layout.fragment_archive_list, container, false);
             ((TextView) root.findViewById(R.id.list_label)).setText(labelRes());
             root.findViewById(R.id.list_new).setOnClickListener(v -> onNew());
+            sortButton = root.findViewById(R.id.list_sort);
+            sortButton.setVisibility(supportsSorting() ? View.VISIBLE : View.GONE);
+            if (supportsSorting()) sortButton.setOnClickListener(v -> chooseSort());
             recycler = root.findViewById(R.id.recycler);
             empty = root.findViewById(R.id.empty_state);
             recycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -121,6 +125,11 @@ public class LibraryFragment extends Fragment {
             });
             return root;
         }
+
+        /** Only the collections tab can be re-ordered. */
+        protected boolean supportsSorting() { return false; }
+
+        protected void chooseSort() { }
 
         protected RecyclerView recyclerView() { return recycler; }
 
@@ -171,6 +180,29 @@ public class LibraryFragment extends Fragment {
     // ------------------------------------------------------------------ tabs
 
     public static class CollectionsTab extends Tab<CollectionDao.CollectionWithCount> {
+
+        @Override protected boolean supportsSorting() { return true; }
+
+        @Override
+        protected void chooseSort() {
+            String[] labels = {getString(R.string.sort_recent), getString(R.string.sort_name),
+                    getString(R.string.sort_custom)};
+            String[] modes = {com.archive.app.utils.SettingsStore.SORT_RECENT,
+                    com.archive.app.utils.SettingsStore.SORT_NAME,
+                    com.archive.app.utils.SettingsStore.SORT_CUSTOM};
+            int current = 2;
+            String mode = com.archive.app.ArchiveApp.self().settings().collectionSort();
+            for (int i = 0; i < modes.length; i++) if (modes[i].equals(mode)) current = i;
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.sort_collections)
+                    .setSingleChoiceItems(labels, current, (dialog, which) -> {
+                        com.archive.app.ArchiveApp.self().settings().setCollectionSort(modes[which]);
+                        com.archive.app.ArchiveApp.self().repo().setCollectionSort(modes[which]);
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        }
 
         @Override int labelRes() { return R.string.library_tab_collections; }
 

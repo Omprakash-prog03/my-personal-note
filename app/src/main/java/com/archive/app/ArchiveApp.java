@@ -50,6 +50,7 @@ public class ArchiveApp extends Application {
                 .build();
         repository = new ArchiveRepository(database, fileStore, executor, mainHandler);
         canvasRepository = new CanvasRepository(database, fileStore, executor, mainHandler);
+        repository.setCollectionSort(settings.collectionSort());
         seedFirstRun();
     }
 
