@@ -630,18 +630,34 @@ public final class CanvasSheets {
                 content.addView(frameRow);
             }
             addActionRow(content,
-                    new String[]{"Flip H", "Flip V", "Crop 1:1", "Crop 4:3"},
+                    new String[]{activity.getString(R.string.flip_h),
+                            activity.getString(R.string.flip_v)},
                     new Runnable[]{
                             () -> host.applyProperty(element, () ->
                                     image.setFlippedHorizontally(!image.isFlippedHorizontally()), "Flip"),
                             () -> host.applyProperty(element, () ->
-                                    image.setFlippedVertically(!image.isFlippedVertically()), "Flip"),
-                            () -> host.applyProperty(element, () -> image.cropToAspect(1f,
-                                    Math.round(image.width), Math.round(image.height)), "Crop"),
-                            () -> host.applyProperty(element, () -> image.cropToAspect(4f / 3f,
-                                    Math.round(image.width), Math.round(image.height)), "Crop")});
+                                    image.setFlippedVertically(!image.isFlippedVertically()), "Flip")});
+            // Aspect presets crop relative to the *source* pixels, not the current frame size.
             addActionRow(content,
-                    new String[]{"Reset crop", "Shadow"},
+                    new String[]{activity.getString(R.string.crop_square),
+                            activity.getString(R.string.crop_four_five),
+                            activity.getString(R.string.crop_sixteen_nine)},
+                    new Runnable[]{
+                            () -> cropToAspect(activity, element, image, host, 1f),
+                            () -> cropToAspect(activity, element, image, host, 4f / 5f),
+                            () -> cropToAspect(activity, element, image, host, 16f / 9f)});
+            content.addView(label(activity, activity.getString(R.string.crop_edges)));
+            addCropSeek(content, activity.getString(R.string.crop_left), 0f, 90f,
+                    image.getCropLeft() * 100f, element, image, host, Edge.LEFT);
+            addCropSeek(content, activity.getString(R.string.crop_top), 0f, 90f,
+                    image.getCropTop() * 100f, element, image, host, Edge.TOP);
+            addCropSeek(content, activity.getString(R.string.crop_right), 10f, 100f,
+                    image.getCropRight() * 100f, element, image, host, Edge.RIGHT);
+            addCropSeek(content, activity.getString(R.string.crop_bottom), 10f, 100f,
+                    image.getCropBottom() * 100f, element, image, host, Edge.BOTTOM);
+            addActionRow(content,
+                    new String[]{activity.getString(R.string.reset_crop),
+                            activity.getString(R.string.shadow)},
                     new Runnable[]{
                             () -> host.applyProperty(element, () ->
                                     image.setCrop(0f, 0f, 1f, 1f), "Reset crop"),
@@ -694,6 +710,55 @@ public final class CanvasSheets {
         }
 
         sheet(activity, activity.getString(R.string.properties) + " · " + element.label(), content);
+    }
+
+    private enum Edge { LEFT, TOP, RIGHT, BOTTOM }
+
+    /** One crop edge as a percentage of the source image. Fractions are clamped by ImageElement. */
+    private static void addCropSeek(LinearLayout content, String label, float min, float max,
+                                    float percent, CanvasElement element, ImageElement image,
+                                    PropertyHost host, Edge edge) {
+        addSeek(content, label, min, max, percent, value -> host.applyProperty(element, () -> {
+            float fraction = value / 100f;
+            switch (edge) {
+                case LEFT:
+                    image.setCrop(fraction, image.getCropTop(), image.getCropRight(),
+                            image.getCropBottom());
+                    break;
+                case TOP:
+                    image.setCrop(image.getCropLeft(), fraction, image.getCropRight(),
+                            image.getCropBottom());
+                    break;
+                case RIGHT:
+                    image.setCrop(image.getCropLeft(), image.getCropTop(), fraction,
+                            image.getCropBottom());
+                    break;
+                default:
+                    image.setCrop(image.getCropLeft(), image.getCropTop(), image.getCropRight(),
+                            fraction);
+                    break;
+            }
+        }, "Crop"));
+    }
+
+    /**
+     * Centre-crops to an aspect using the media row's pixel size. Falls back to the element's size
+     * when the media row is gone, so a missing file never blocks editing.
+     */
+    private static void cropToAspect(Activity activity, CanvasElement element, ImageElement image,
+                                     PropertyHost host, float aspect) {
+        String mediaId = image.getMediaId();
+        if (mediaId == null) {
+            int width = Math.round(image.width);
+            int height = Math.round(image.height);
+            host.applyProperty(element, () -> image.cropToAspect(aspect, width, height), "Crop");
+            return;
+        }
+        com.archive.app.ArchiveApp.get(activity).repo().mediaOnce(mediaId, media -> {
+            int width = media != null && media.width > 0 ? media.width : Math.round(image.width);
+            int height = media != null && media.height > 0 ? media.height : Math.round(image.height);
+            host.applyProperty(element, () -> image.cropToAspect(aspect, width, height), "Crop");
+        });
     }
 
     // ------------------------------------------------------------------ ink defaults

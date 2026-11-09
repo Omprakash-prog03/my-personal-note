@@ -15,6 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archive.app.R;
@@ -246,8 +247,8 @@ public class CollectionActivity extends BaseActivity {
     }
 
     /**
-     * Multi-page export: lets the owner tick exactly the pages they want in the PDF instead of
-     * committing to the whole collection.
+     * Multi-page export with thumbnails, so the owner ticks pages by sight rather than by title.
+     * The picker is a custom dialog because a plain items dialog cannot show previews.
      */
     private void exportSelectedPages() {
         app.repo().pagesSync(collectionId, pages -> {
@@ -255,19 +256,19 @@ public class CollectionActivity extends BaseActivity {
                 UiUtils.snack(recycler, getString(R.string.export_no_pages));
                 return;
             }
-            String[] titles = new String[pages.size()];
-            for (int i = 0; i < pages.size(); i++) {
-                PageEntity page = pages.get(i);
-                titles[i] = (i + 1) + ". " + (page.title == null || page.title.trim().isEmpty()
-                        ? getString(R.string.untitled_page) : page.title);
-            }
-            boolean[] checked = new boolean[pages.size()];
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+            View content = LayoutInflater.from(this).inflate(R.layout.dialog_page_picker, null);
+            RecyclerView list = content.findViewById(R.id.picker_recycler);
+            list.setLayoutManager(new LinearLayoutManager(this));
+            final boolean[] checked = new boolean[pages.size()];
+            PagePickAdapter adapter = new PagePickAdapter(pages, checked);
+            list.setAdapter(adapter);
+            content.findViewById(R.id.picker_select_all).setOnClickListener(v -> adapter.selectAll());
+
+            androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.export_pages)
-                    .setMultiChoiceItems(titles, checked,
-                            (dialog, which, isChecked) -> checked[which] = isChecked)
+                    .setView(content)
                     .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.export, (dialog, which) -> {
+                    .setPositiveButton(R.string.export, (d, which) -> {
                         List<PageEntity> chosen = new ArrayList<>();
                         for (int i = 0; i < pages.size(); i++) {
                             if (checked[i]) chosen.add(pages.get(i));
@@ -278,15 +279,7 @@ public class CollectionActivity extends BaseActivity {
                         }
                         exportPages(chosen);
                     })
-                    .setNeutralButton(R.string.select_all, null);
-            androidx.appcompat.app.AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(d -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)
-                    .setOnClickListener(v -> {
-                        for (int i = 0; i < pages.size(); i++) {
-                            checked[i] = true;
-                            dialog.getListView().setItemChecked(i, true);
-                        }
-                    }));
+                    .create();
             dialog.show();
         });
     }
@@ -392,6 +385,69 @@ public class CollectionActivity extends BaseActivity {
                 meta = view.findViewById(R.id.page_meta);
                 badge = view.findViewById(R.id.page_format_badge);
                 thumb = view.findViewById(R.id.page_thumb);
+            }
+        }
+    }
+
+    /** Row in the export picker: thumbnail, title, and a tick box driven by row taps. */
+    private class PagePickAdapter extends RecyclerView.Adapter<PagePickAdapter.Holder> {
+
+        private final List<PageEntity> pages;
+        private final boolean[] checked;
+
+        PagePickAdapter(List<PageEntity> pages, boolean[] checked) {
+            this.pages = pages;
+            this.checked = checked;
+        }
+
+        void selectAll() {
+            java.util.Arrays.fill(checked, true);
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new Holder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_page_select, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull Holder holder, int position) {
+            PageEntity page = pages.get(position);
+            holder.title.setText((position + 1) + ". " + (page.title.trim().isEmpty()
+                    ? getString(R.string.untitled_page) : page.title));
+            holder.meta.setText(PageFormat.labelOf(page.formatKey) + " · "
+                    + DateFormats.relative(page.updatedAt));
+            holder.check.setChecked(checked[position]);
+            if (page.thumbnailPath != null) {
+                ThumbnailLoader.loadMedia(holder.thumb, page.thumbnailPath, 160, 220);
+            } else {
+                holder.thumb.setImageResource(R.drawable.ic_pages);
+            }
+            holder.itemView.setOnClickListener(v -> {
+                int index = holder.getBindingAdapterPosition();
+                if (index == RecyclerView.NO_POSITION) return;
+                checked[index] = !checked[index];
+                notifyItemChanged(index);
+            });
+        }
+
+        @Override
+        public int getItemCount() { return pages.size(); }
+
+        class Holder extends RecyclerView.ViewHolder {
+            final ImageView thumb;
+            final TextView title;
+            final TextView meta;
+            final android.widget.CheckBox check;
+
+            Holder(View view) {
+                super(view);
+                thumb = view.findViewById(R.id.select_thumb);
+                title = view.findViewById(R.id.select_title);
+                meta = view.findViewById(R.id.select_meta);
+                check = view.findViewById(R.id.select_check);
             }
         }
     }

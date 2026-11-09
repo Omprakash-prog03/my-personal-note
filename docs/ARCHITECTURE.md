@@ -281,3 +281,32 @@ template works on A4, square and journal formats. Nothing is flattened and no st
 inserted — a template is a head start, not fake content. The objects are inserted through
 `CanvasRepository.addElements`, i.e. exactly the same path an imported image takes, so undo, autosave
 and export behave normally afterwards.
+
+## 15. Polish pass: crop, export picker, accessibility
+
+**Image crop** (`CanvasSheets` image branch) keeps the destructive-free model: cropping edits
+normalised source fractions on the element, never the file. Aspect presets read the *media row's*
+pixel size (`mediaOnce`) instead of the on-canvas frame, because a resized frame would otherwise
+produce the wrong crop; a missing media row falls back to element dimensions rather than failing.
+Four edge sliders write left/top/right/bottom percentages through `ImageElement.setCrop`, which clamps
+and refuses to let edges cross.
+
+**Export picker** (`dialog_page_picker.xml` + `PagePickAdapter`) replaced a text-only multi-choice
+dialog with a thumbnail list: row taps toggle, "Select all" fills the tick array, and the chosen pages
+go through the same order-preserving export path.
+
+**Accessibility guard** (`tools/check_sources.py`) now fails the check when an `ImageView` has neither
+`android:contentDescription` nor an explicit `importantForAccessibility="no"`, so decorative and
+described images stay distinguishable as layouts change.
+
+## 16. Test strategy
+
+| Layer | Test | Where |
+|---|---|---|
+| Security | seeded credential verifies, tampering/malformed rejected, hex, strength | `app/src/test/.../PasswordHasherTest` |
+| Geometry | orientation, aspect, key/label sync, export cap expectations | `app/src/test/.../PageFormatTest` |
+| Ids | uniqueness, UUID shape | `app/src/test/.../IdsTest` |
+| Database | persistence, z-order, cascade delete, soft-delete filtering, transaction rollback | `androidTest/.../ArchiveDatabaseTest` |
+| Canvas | hydration, grouping, snapshot undo, layer order, per-object dirty clearing | `androidTest/.../CanvasDocumentTest` |
+| Crop | clamping, crossing edges, aspect from source pixels, invalid source guard | `androidTest/.../ImageElementCropTest` |
+| Export | aspect, background include/exclude, 4096 cap, painted pixels | `androidTest/.../PageExporterTest` |

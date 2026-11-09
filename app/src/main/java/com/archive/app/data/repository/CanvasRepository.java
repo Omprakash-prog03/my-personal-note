@@ -52,10 +52,23 @@ public class CanvasRepository {
     /** Single transaction for a save batch; called from the autosave scheduler. */
     public void save(String pageId, long updatedAt, List<CanvasElementEntity> upserts,
                      List<String> deletes, Runnable done) {
+        save(pageId, updatedAt, upserts, deletes, done, null);
+    }
+
+    /**
+     * Same batch, but reports failure so the view model can keep the edits dirty and retry instead of
+     * showing "Saved" for a write that never happened.
+     */
+    public void save(String pageId, long updatedAt, List<CanvasElementEntity> upserts,
+                     List<String> deletes, Runnable done, Runnable onFailure) {
         executor.execute(() -> {
-            db.elementDao().saveBatch(pageId, updatedAt, upserts, deletes);
-            db.pageDao().touch(pageId, updatedAt);
-            if (done != null) main.post(done);
+            try {
+                db.elementDao().saveBatch(pageId, updatedAt, upserts, deletes);
+                db.pageDao().touch(pageId, updatedAt);
+                if (done != null) main.post(done);
+            } catch (Throwable error) {
+                if (onFailure != null) main.post(onFailure);
+            }
         });
     }
 

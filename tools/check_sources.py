@@ -88,6 +88,29 @@ def duplicate_values():
     return duplicates
 
 
+ANDROID_NS = '{http://schemas.android.com/apk/res/android}'
+
+
+def missing_content_descriptions():
+    """Image views must either describe themselves or be explicitly marked decorative."""
+    findings = []
+    for path in glob.glob(os.path.join(RES, 'layout*', '*.xml')):
+        try:
+            tree = ET.parse(path)
+        except ET.ParseError:
+            continue
+        for node in tree.iter():
+            tag = node.tag if isinstance(node.tag, str) else ''
+            if 'ImageView' not in tag:
+                continue
+            described = node.get(ANDROID_NS + 'contentDescription') is not None
+            decorative = node.get(ANDROID_NS + 'importantForAccessibility') in ('no', 'noHideDescendants')
+            if not described and not decorative:
+                findings.append((os.path.relpath(path, ROOT), tag,
+                                 node.get(ANDROID_NS + 'id', '(no id)')))
+    return findings
+
+
 def layout_ids():
     ids = set()
     for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
@@ -113,6 +136,8 @@ def check():
     java_files = sorted(glob.glob(os.path.join(JAVA, '**', '*.java'), recursive=True))
     test_files = sorted(glob.glob(os.path.join(ROOT, 'app/src/test/java', '**', '*.java'),
                                   recursive=True))
+    test_files += sorted(glob.glob(os.path.join(ROOT, 'app/src/androidTest/java', '**', '*.java'),
+                                    recursive=True))
     syntax_files = java_files + test_files
     if parser:
         for path in syntax_files:
@@ -146,6 +171,11 @@ def check():
             if (kind, name) not in available:
                 problems += 1
                 print(f'RES REF {os.path.relpath(path, ROOT)}: @{kind}/{name} not found')
+
+    # --- accessibility: image views need a description or an explicit decorative marker
+    for path, tag, view_id in missing_content_descriptions():
+        problems += 1
+        print(f'A11Y {path}: {tag} {view_id} has no android:contentDescription')
 
     # --- duplicate values resources (build-breaking)
     for (kind, name), first, second in duplicate_values():
