@@ -142,6 +142,30 @@ public class SettingsFragment extends Fragment {
         grid.setChecked(settings.showGrid());
         grid.setOnCheckedChangeListener((button, checked) -> settings.setShowGrid(checked));
 
+        TextView exportFormat = root.findViewById(R.id.value_export_format);
+        exportFormat.setText(exportFormatLabel(settings.exportFormat()));
+        root.findViewById(R.id.row_export_format).setOnClickListener(v -> {
+            String[] labels = {getString(R.string.export_png), getString(R.string.export_jpeg),
+                    getString(R.string.export_pdf)};
+            String[] keys = {"PNG", "JPEG", "PDF"};
+            UiUtils.listDialog(requireContext(), getString(R.string.settings_export_format),
+                    labels, index -> {
+                        settings.setExportFormat(keys[index]);
+                        exportFormat.setText(labels[index]);
+                    });
+        });
+
+        TextView exportScale = root.findViewById(R.id.value_export_scale);
+        exportScale.setText(getString(R.string.export_scale_value, settings.exportScale()));
+        root.findViewById(R.id.row_export_scale).setOnClickListener(v -> {
+            String[] labels = {"1×", "2×", "3×"};
+            UiUtils.listDialog(requireContext(), getString(R.string.settings_export_scale),
+                    labels, index -> {
+                        settings.setExportScale(index + 1);
+                        exportScale.setText(labels[index]);
+                    });
+        });
+
         TextView storage = root.findViewById(R.id.storage_usage);
         app.repo().storageUsage(bytes -> storage.setText(
                 getString(R.string.storage_used, UiUtils.humanBytes(bytes))));
@@ -267,6 +291,12 @@ public class SettingsFragment extends Fragment {
                         getString(R.string.restore_failed, String.valueOf(e.getMessage()))));
             }
         });
+    }
+
+    private String exportFormatLabel(String key) {
+        if ("JPEG".equals(key)) return getString(R.string.export_jpeg);
+        if ("PDF".equals(key)) return getString(R.string.export_pdf);
+        return getString(R.string.export_png);
     }
 
     private String versionName() {

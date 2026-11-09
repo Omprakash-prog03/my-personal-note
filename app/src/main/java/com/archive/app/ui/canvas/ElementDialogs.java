@@ -185,9 +185,12 @@ public final class ElementDialogs {
         String[] resolutions = {activity.getString(R.string.res_1x) + " (1×)",
                 activity.getString(R.string.res_2x) + " (2×)",
                 activity.getString(R.string.res_3x) + " (3×)"};
-        final int[] formatChoice = {0};
-        final int[] scaleChoice = {1};
-        final boolean[] includeBackground = {true};
+        com.archive.app.utils.SettingsStore prefs =
+                com.archive.app.ArchiveApp.get(activity).settings();
+        final int[] formatChoice = {"JPEG".equals(prefs.exportFormat()) ? 1
+                : "PDF".equals(prefs.exportFormat()) ? 2 : 0};
+        final int[] scaleChoice = {Math.max(0, Math.min(2, prefs.exportScale() - 1))};
+        final boolean[] includeBackground = {prefs.exportIncludeBackground()};
 
         LinearLayout layout = form(activity);
         TextView formatLabel = new TextView(activity);
@@ -196,7 +199,7 @@ public final class ElementDialogs {
         layout.addView(formatLabel);
 
         TextView formatValue = new TextView(activity);
-        formatValue.setText(formats[0]);
+        formatValue.setText(formats[formatChoice[0]]);
         formatValue.setTextColor(UiKit.accent(activity));
         formatValue.setPadding(0, UiUtils.dp(activity, 6), 0, UiUtils.dp(activity, 6));
         formatValue.setOnClickListener(v -> UiUtils.listDialog(activity,
@@ -207,7 +210,7 @@ public final class ElementDialogs {
         layout.addView(formatValue);
 
         TextView resolutionValue = new TextView(activity);
-        resolutionValue.setText(resolutions[1]);
+        resolutionValue.setText(resolutions[scaleChoice[0]]);
         resolutionValue.setTextColor(UiKit.accent(activity));
         resolutionValue.setPadding(0, UiUtils.dp(activity, 6), 0, UiUtils.dp(activity, 6));
         resolutionValue.setOnClickListener(v -> UiUtils.listDialog(activity,
@@ -220,7 +223,7 @@ public final class ElementDialogs {
         com.google.android.material.materialswitch.MaterialSwitch includeSwitch =
                 new com.google.android.material.materialswitch.MaterialSwitch(activity);
         includeSwitch.setText(R.string.include_background);
-        includeSwitch.setChecked(true);
+        includeSwitch.setChecked(includeBackground[0]);
         includeSwitch.setOnCheckedChangeListener((b, checked) -> includeBackground[0] = checked);
         layout.addView(includeSwitch);
 
@@ -237,6 +240,10 @@ public final class ElementDialogs {
                             : formatChoice[0] == 2 ? PageExporter.Format.PDF : PageExporter.Format.PNG;
                     settings.scale = scaleChoice[0] == 0 ? 1f : scaleChoice[0] == 2 ? 3f : 2f;
                     settings.includeBackground = includeBackground[0];
+                    prefs.setExportFormat(formatChoice[0] == 1 ? "JPEG"
+                            : formatChoice[0] == 2 ? "PDF" : "PNG");
+                    prefs.setExportScale(scaleChoice[0] + 1);
+                    prefs.setExportIncludeBackground(includeBackground[0]);
                     String name = nameField.getText().toString().trim();
                     settings.fileName = name.isEmpty() ? "archive-page" : name;
                     onExport.accept(settings);

@@ -527,4 +527,9 @@
     <string name="page_duplicated">Page duplicated</string>
     <string name="duplicate_failed">Could not duplicate that page.</string>
     <string name="page_order_edge">Already at that end of the collection.</string>
+
+    <!-- Export defaults -->
+    <string name="settings_export_format">Default export format</string>
+    <string name="settings_export_scale">Default export scale</string>
+    <string name="export_scale_value">%1$d×</string>
 </resources>

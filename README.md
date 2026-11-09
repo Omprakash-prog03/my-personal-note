@@ -141,9 +141,9 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Handwriting (pen / pencil / highlighter / eraser, colour, width) | ✅ |
 | Sticker and shape libraries, background selector | ✅ |
 | Autosave with debounce, forced saves, crash-recovery prompt | 🧪 |
-| PNG / JPEG / PDF export, share via FileProvider | 🧪 |
+| PNG / JPEG / PDF export with remembered defaults, share via FileProvider | 🧪 |
 | Journal, research notebooks, personal library, global search, tags | ✅ |
-| Settings: appearance, canvas defaults, storage, privacy, about, trash | ✅ |
+| Settings: appearance, canvas defaults, export defaults, storage, privacy, about, trash | ✅ |
 | Local account: salted PBKDF2 login, change password, sign out, throttling | 🧪 |
 | Biometric / device-credential app lock | 🧪 |
 | Backup (WorkManager zip) and staged restore | 🧪 |

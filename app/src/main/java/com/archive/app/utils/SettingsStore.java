@@ -79,6 +79,32 @@ public class SettingsStore {
     public boolean unlockedThisSession() { return prefs.getBoolean("session_unlocked", false); }
     public void setUnlockedThisSession(boolean value) { prefs.edit().putBoolean("session_unlocked", value).apply(); }
 
+    // ------------------------------------------------------------------ export defaults
+
+    public String exportFormat() {
+        return prefs.getString("export_format", "PNG");
+    }
+
+    public void setExportFormat(String value) {
+        prefs.edit().putString("export_format", value == null ? "PNG" : value).apply();
+    }
+
+    public int exportScale() {
+        return Math.max(1, Math.min(3, prefs.getInt("export_scale", 2)));
+    }
+
+    public void setExportScale(int value) {
+        prefs.edit().putInt("export_scale", Math.max(1, Math.min(3, value))).apply();
+    }
+
+    public boolean exportIncludeBackground() {
+        return prefs.getBoolean("export_background", true);
+    }
+
+    public void setExportIncludeBackground(boolean value) {
+        prefs.edit().putBoolean("export_background", value).apply();
+    }
+
     public String deviceLabel() {
         return Build.MANUFACTURER + " " + Build.MODEL;
     }
