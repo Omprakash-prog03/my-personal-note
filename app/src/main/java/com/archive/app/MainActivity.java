@@ -41,7 +41,8 @@ import java.util.List;
  * swapping fragments. Fragments are added once and shown/hidden, so scroll state and search text
  * survive tab changes.
  */
-public class MainActivity extends com.archive.app.ui.common.BaseActivity implements CreateSheet.Host {
+public class MainActivity extends com.archive.app.ui.common.BaseActivity
+        implements CreateSheet.Host, com.archive.app.ui.home.HomeFragment.Host {
 
     private BottomNavigationView bottomNav;
     private int currentTab = R.id.tab_home;
@@ -114,6 +115,36 @@ public class MainActivity extends com.archive.app.ui.common.BaseActivity impleme
         }
         transaction.commit();
         currentTab = tabId;
+    }
+
+    // ------------------------------------------------------------------ HomeFragment.Host
+
+    @Override
+    public void openSearch() {
+        selectTab(R.id.tab_search);
+    }
+
+    @Override
+    public void openLibraryTab(int index) {
+        selectTab(R.id.tab_library);
+        androidx.fragment.app.Fragment library = getSupportFragmentManager()
+                .findFragmentByTag("tab-" + R.id.tab_library);
+        if (library instanceof com.archive.app.ui.library.LibraryFragment) {
+            ((com.archive.app.ui.library.LibraryFragment) library).selectSection(index);
+        }
+    }
+
+    @Override
+    public void openCreate() {
+        CreateSheet.show(this, this);
+    }
+
+    /** Switches the visible tab without re-entering the bottom-nav listener. */
+    private void selectTab(int tabId) {
+        suppressNavListener = true;
+        bottomNav.setSelectedItemId(tabId);
+        suppressNavListener = false;
+        showTab(tabId);
     }
 
     @Override
