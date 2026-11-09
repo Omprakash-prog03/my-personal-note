@@ -14,7 +14,7 @@
         app:menu="@menu/menu_research"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/research_project"
-        app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+        app:titleTextAppearance="@style/TextAppearance.Nuzhat.Title" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -37,10 +37,10 @@
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted"
+                android:textColorHint="?attr/nuzhatMuted"
                 android:textSize="24sp" />
 
-            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+            <TextView style="@style/Widget.Nuzhat.SectionLabel" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginTop="18dp"
                 android:text="@string/research_description" />
 
@@ -53,11 +53,11 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="52dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted" />
+                android:textColorHint="?attr/nuzhatMuted" />
 
-            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+            <TextView style="@style/Widget.Nuzhat.SectionLabel" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginTop="16dp"
                 android:text="@string/research_questions" />
 
@@ -70,11 +70,11 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="52dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted" />
+                android:textColorHint="?attr/nuzhatMuted" />
 
-            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+            <TextView style="@style/Widget.Nuzhat.SectionLabel" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginTop="16dp"
                 android:text="@string/research_hypothesis" />
 
@@ -87,11 +87,11 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="52dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted" />
+                android:textColorHint="?attr/nuzhatMuted" />
 
-            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+            <TextView style="@style/Widget.Nuzhat.SectionLabel" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginTop="16dp"
                 android:text="@string/research_findings" />
 
@@ -104,11 +104,11 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="52dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted" />
+                android:textColorHint="?attr/nuzhatMuted" />
 
-            <TextView style="@style/Widget.Archive.SectionLabel" android:layout_width="wrap_content"
+            <TextView style="@style/Widget.Nuzhat.SectionLabel" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginTop="16dp"
                 android:text="@string/research_conclusion" />
 
@@ -121,9 +121,9 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="52dp"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/archiveMuted" />
+                android:textColorHint="?attr/nuzhatMuted" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,7 +133,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -141,7 +141,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_add_reference"
-                    style="@style/Widget.Archive.TextButton"
+                    style="@style/Widget.Nuzhat.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/research_add_reference"
@@ -153,8 +153,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/references_empty"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                android:textColor="?attr/nuzhatMuted" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/references_recycler"
@@ -168,8 +168,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/reference_note_local"
-                android:textAppearance="@style/TextAppearance.Archive.Label"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Label"
+                android:textColor="?attr/nuzhatMuted" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

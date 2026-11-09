@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.archive.app.ui.common.HomeBackdropView
+    <com.nuzhat.app.ui.common.HomeBackdropView
         android:id="@+id/home_backdrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.32"
                 android:text="@string/app_name"
-                android:textAppearance="@style/TextAppearance.Archive.Label"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Label"
+                android:textColor="?attr/nuzhatMuted" />
 
             <TextView
                 android:id="@+id/greeting"
@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/home_intro"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                android:textColor="?attr/nuzhatMuted" />
 
             <LinearLayout
                 android:id="@+id/search_bar"
@@ -71,7 +71,7 @@
                     android:layout_height="20dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_search"
-                    app:tint="?attr/archiveMuted" />
+                    app:tint="?attr/nuzhatMuted" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -79,8 +79,8 @@
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:text="@string/home_search_hint"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
             </LinearLayout>
 
             <!-- Pinned collections -->
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/section_pinned"
-                    style="@style/Widget.Archive.SectionLabel" />
+                    style="@style/Widget.Nuzhat.SectionLabel" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pinned_recycler"
@@ -123,7 +123,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/Widget.Archive.SectionLabel"
+                        style="@style/Widget.Nuzhat.SectionLabel"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -135,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="@string/see_all"
-                        android:textAppearance="@style/TextAppearance.Archive.Label"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Label"
                         android:textColor="?attr/colorPrimary" />
                 </LinearLayout>
 
@@ -165,7 +165,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/Widget.Archive.SectionLabel"
+                        style="@style/Widget.Nuzhat.SectionLabel"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -177,7 +177,7 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="@string/see_all"
-                        android:textAppearance="@style/TextAppearance.Archive.Label"
+                        android:textAppearance="@style/TextAppearance.Nuzhat.Label"
                         android:textColor="?attr/colorPrimary" />
                 </LinearLayout>
 
@@ -201,14 +201,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/section_journal" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/journal_card"
-                    style="@style/Widget.Archive.Card"
+                    style="@style/Widget.Nuzhat.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -223,7 +223,7 @@
 
                         <TextView
                             android:id="@+id/journal_date"
-                            style="@style/Widget.Archive.SectionLabel"
+                            style="@style/Widget.Nuzhat.SectionLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/journal_today" />
@@ -236,7 +236,7 @@
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:text="@string/journal_empty"
-                            android:textAppearance="@style/TextAppearance.Archive.Title"
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
@@ -246,8 +246,8 @@
                             android:layout_marginTop="4dp"
                             android:maxLines="2"
                             android:ellipsize="end"
-                            android:textAppearance="@style/TextAppearance.Archive.Body"
-                            android:textColor="?attr/archiveMuted" />
+                            android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                            android:textColor="?attr/nuzhatMuted" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -261,7 +261,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/Widget.Archive.SectionLabel"
+                    style="@style/Widget.Nuzhat.SectionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/section_recent_media" />
@@ -282,8 +282,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/no_media_yet"
-                    android:textAppearance="@style/TextAppearance.Archive.Body"
-                    android:textColor="?attr/archiveMuted" />
+                    android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                    android:textColor="?attr/nuzhatMuted" />
             </LinearLayout>
 
             <LinearLayout

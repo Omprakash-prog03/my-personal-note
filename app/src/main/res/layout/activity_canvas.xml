@@ -4,7 +4,7 @@
     android:id="@+id/canvas_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/archiveBackdrop">
+    android:background="?attr/nuzhatBackdrop">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,15 +18,15 @@
             android:background="?attr/colorSurface"
             app:menu="@menu/menu_canvas"
             app:navigationIcon="@drawable/ic_back"
-            app:subtitleTextColor="?attr/archiveMuted"
-            app:titleTextAppearance="@style/TextAppearance.Archive.Title" />
+            app:subtitleTextColor="?attr/nuzhatMuted"
+            app:titleTextAppearance="@style/TextAppearance.Nuzhat.Title" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <com.archive.app.canvas.engine.CanvasView
+            <com.nuzhat.app.canvas.engine.CanvasView
                 android:id="@+id/canvas_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -43,7 +43,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/canvas_hint"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <LinearLayout
@@ -57,26 +57,26 @@
 
                 <ImageButton
                     android:id="@+id/zoom_in"
-                    style="@style/Widget.Archive.IconButton"
+                    style="@style/Widget.Nuzhat.IconButton"
                     android:contentDescription="@string/zoom_in"
                     android:src="@drawable/ic_zoom_in" />
 
                 <ImageButton
                     android:id="@+id/zoom_fit"
-                    style="@style/Widget.Archive.IconButton"
+                    style="@style/Widget.Nuzhat.IconButton"
                     android:contentDescription="@string/zoom_fit"
                     android:src="@drawable/ic_crop" />
 
                 <ImageButton
                     android:id="@+id/zoom_out"
-                    style="@style/Widget.Archive.IconButton"
+                    style="@style/Widget.Nuzhat.IconButton"
                     android:contentDescription="@string/zoom_out"
                     android:src="@drawable/ic_zoom_out" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/draw_options_card"
-                style="@style/Widget.Archive.Card"
+                style="@style/Widget.Nuzhat.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -102,7 +102,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/context_card"
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -129,7 +129,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/tool_rail_card"
-            style="@style/Widget.Archive.Card"
+            style="@style/Widget.Nuzhat.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

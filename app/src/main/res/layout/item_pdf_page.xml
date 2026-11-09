@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="6dp"
-        android:textAppearance="@style/TextAppearance.Archive.Label"
-        android:textColor="?attr/archiveMuted" />
+        android:textAppearance="@style/TextAppearance.Nuzhat.Label"
+        android:textColor="?attr/nuzhatMuted" />
 </LinearLayout>

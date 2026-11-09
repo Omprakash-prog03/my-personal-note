@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/page_card"
-    style="@style/Widget.Archive.Card"
+    style="@style/Widget.Nuzhat.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -17,7 +17,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/page_thumb_height"
-            android:background="?attr/archiveBackdrop">
+            android:background="?attr/nuzhatBackdrop">
 
             <ImageView
                 android:id="@+id/page_thumb"
@@ -37,7 +37,7 @@
                 android:paddingEnd="8dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:textAppearance="@style/TextAppearance.Archive.Label"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Label"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </FrameLayout>
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Title"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
@@ -63,8 +63,8 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Body"
-                android:textColor="?attr/archiveMuted" />
+                android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+                android:textColor="?attr/nuzhatMuted" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

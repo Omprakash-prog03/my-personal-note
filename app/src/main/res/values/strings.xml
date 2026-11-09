@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ARCHIVE</string>
+    <string name="app_name">NUZHAT</string>
     <string name="app_tagline">A personal museum of everything worth keeping.</string>
 
     <!-- Navigation -->
@@ -99,7 +99,7 @@
     <!-- Canvas -->
     <string name="canvas_saved">Saved</string>
     <string name="recovery_title">Recover unsaved work?</string>
-    <string name="recovery_body">ARCHIVE found changes from a session that closed unexpectedly.</string>
+    <string name="recovery_body">NUZHAT found changes from a session that closed unexpectedly.</string>
     <string name="restore_work">Recover</string>
     <string name="discard">Discard</string>
     <string name="playing_audio">Playing %1$s</string>
@@ -289,7 +289,7 @@
     <string name="reference_type">Type</string>
     <string name="reference_collected">Collected %1$s</string>
     <string name="references_empty">No references yet.</string>
-    <string name="reference_note_local">Stored locally. Nothing here is verified by ARCHIVE.</string>
+    <string name="reference_note_local">Stored locally. Nothing here is verified by NUZHAT.</string>
 
     <!-- Library -->
     <string name="library_title">Library</string>
@@ -334,7 +334,7 @@
     <string name="settings_title">Settings</string>
     <string name="settings_appearance">Appearance</string>
     <string name="settings_theme">Theme</string>
-    <string name="theme_warm">Warm Archive</string>
+    <string name="theme_warm">Warm Nuzhat</string>
     <string name="theme_minimal">Modern Minimal</string>
     <string name="theme_dark">Dark Academic</string>
     <string name="settings_accent">Accent colour</string>
@@ -374,10 +374,10 @@
     <string name="backup_done">Backup saved: %1$s</string>
     <string name="backup_empty">Nothing to back up yet</string>
     <string name="restore_title">Restore archive?</string>
-    <string name="restore_body">This replaces the current archive with the selected backup. ARCHIVE will restart afterwards. Existing data will be lost.</string>
+    <string name="restore_body">This replaces the current archive with the selected backup. NUZHAT will restart afterwards. Existing data will be lost.</string>
     <string name="restore_done">Backup restored. Restarting…</string>
-    <string name="restore_invalid">That file is not a valid ARCHIVE backup.</string>
-    <string name="biometric_title">Unlock ARCHIVE</string>
+    <string name="restore_invalid">That file is not a valid NUZHAT backup.</string>
+    <string name="biometric_title">Unlock NUZHAT</string>
     <string name="biometric_subtitle">Your archive is private</string>
     <string name="biometric_unavailable">Biometric unlock is not available on this device</string>
     <string name="generic_error">Something went wrong: %1$s</string>
@@ -495,13 +495,13 @@
     <string name="login_missing_username">Enter your username.</string>
     <string name="login_missing_password">Enter your password.</string>
     <string name="login_offline_note">Your account and everything you save stay on this device. No cloud, no tracking.</string>
-    <string name="login_forgot_note">Forgotten credentials cannot be recovered in the app. They can only be reset by clearing ARCHIVE\'s data in Android settings, which erases the archive.</string>
+    <string name="login_forgot_note">Forgotten credentials cannot be recovered in the app. They can only be reset by clearing NUZHAT\'s data in Android settings, which erases the archive.</string>
 
     <string name="account_title">Account</string>
     <string name="account_signed_in_as">Signed in as %1$s · local account</string>
     <string name="account_change_password">Change password</string>
     <string name="account_sign_out">Sign out</string>
-    <string name="account_sign_out_title">Sign out of ARCHIVE?</string>
+    <string name="account_sign_out_title">Sign out of NUZHAT?</string>
     <string name="account_sign_out_body">Your collections and pages stay on this device. You will need your password to open them again.</string>
 
     <string name="password_current">Current password</string>
@@ -561,4 +561,28 @@
     <string name="crash_report_copy">Copy details</string>
     <string name="crash_report_copied">Copied — paste it into a message to report the crash</string>
     <string name="crash_report_dismiss">Dismiss</string>
+    <string name="nav_collections">Collections</string>
+    <string name="nav_activity">Activity</string>
+    <string name="app_name_urdu">نزہت</string>
+
+    <!-- Activity timeline -->
+    <string name="activity_title">Activity</string>
+    <string name="activity_subtitle">Everything you have added, edited and removed</string>
+    <string name="activity_search_hint">Search activity</string>
+    <string name="activity_filter_all">All</string>
+    <string name="activity_filter_collections">Collections</string>
+    <string name="activity_filter_pages">Pages</string>
+    <string name="activity_filter_media">Media</string>
+    <string name="activity_filter_objects">Objects</string>
+    <string name="activity_filter_exports">Exports</string>
+    <string name="activity_filter_by_collection">Filter by collection</string>
+    <string name="activity_all_collections">All collections</string>
+    <string name="activity_group_today">Today</string>
+    <string name="activity_group_yesterday">Yesterday</string>
+    <string name="activity_group_week">This week</string>
+    <string name="activity_group_earlier">Earlier</string>
+    <string name="activity_empty_title">No history yet</string>
+    <string name="activity_empty_body">Create a collection or open a page — what you do here is recorded automatically.</string>
+    <string name="activity_no_results">Nothing matches this filter.</string>
+    <string name="activity_meta_page">Page</string>
 </resources>

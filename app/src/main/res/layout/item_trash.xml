@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.Archive.Card.Outlined"
+    style="@style/Widget.Nuzhat.Card.Outlined"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp">
@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/trash_type"
-                style="@style/Widget.Archive.SectionLabel"
+                style="@style/Widget.Nuzhat.SectionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -31,19 +31,19 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Archive.Title"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Title"
                 android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/trash_restore"
-            style="@style/Widget.Archive.IconButton"
+            style="@style/Widget.Nuzhat.IconButton"
             android:contentDescription="@string/restore"
             android:src="@drawable/ic_restore" />
 
         <ImageButton
             android:id="@+id/trash_delete"
-            style="@style/Widget.Archive.IconButton"
+            style="@style/Widget.Nuzhat.IconButton"
             android:contentDescription="@string/delete_forever"
             android:src="@drawable/ic_delete" />
     </LinearLayout>

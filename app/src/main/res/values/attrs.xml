@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Canvas + surface colours resolved from the active theme so no screen hardcodes ink. -->
-    <attr name="archiveBackdrop" format="color" />
-    <attr name="archiveSelection" format="color" />
-    <attr name="archiveHandleFill" format="color" />
-    <attr name="archiveMuted" format="color" />
-    <attr name="archiveRule" format="color" />
-    <attr name="archivePaper" format="color" />
-    <attr name="archivePaperInk" format="color" />
-    <attr name="archiveCardTint" format="color" />
+    <attr name="nuzhatBackdrop" format="color" />
+    <attr name="nuzhatSelection" format="color" />
+    <attr name="nuzhatHandleFill" format="color" />
+    <attr name="nuzhatMuted" format="color" />
+    <attr name="nuzhatRule" format="color" />
+    <attr name="nuzhatPaper" format="color" />
+    <attr name="nuzhatPaperInk" format="color" />
+    <attr name="nuzhatCardTint" format="color" />
 </resources>

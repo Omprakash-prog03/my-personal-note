@@ -15,7 +15,7 @@
         android:layout_height="40dp"
         android:alpha="0.35"
         android:src="@drawable/ic_folder"
-        app:tint="?attr/archiveMuted"
+        app:tint="?attr/nuzhatMuted"
         android:contentDescription="@null" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:textAppearance="@style/TextAppearance.Archive.Title"
+        android:textAppearance="@style/TextAppearance.Nuzhat.Title"
         android:textColor="?attr/colorOnSurface"
         android:text="@string/nothing_here" />
 
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.Archive.Body"
-        android:textColor="?attr/archiveMuted"
+        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+        android:textColor="?attr/nuzhatMuted"
         android:text="@string/no_collections_yet" />
 </LinearLayout>

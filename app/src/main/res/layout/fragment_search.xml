@@ -101,8 +101,8 @@
         android:layout_height="wrap_content"
         android:padding="24dp"
         android:text="@string/search_empty"
-        android:textAppearance="@style/TextAppearance.Archive.Body"
-        android:textColor="?attr/archiveMuted" />
+        android:textAppearance="@style/TextAppearance.Nuzhat.Body"
+        android:textColor="?attr/nuzhatMuted" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler"
