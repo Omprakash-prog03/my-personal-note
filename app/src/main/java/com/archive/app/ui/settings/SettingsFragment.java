@@ -25,7 +25,7 @@ import com.archive.app.R;
 import com.archive.app.data.preferences.AuthStore;
 import com.archive.app.ui.auth.AccountDialogs;
 import com.archive.app.ui.auth.LoginActivity;
-import com.archive.app.data.entity.PageFormat;
+import com.archive.app.domain.model.PageFormat;
 import com.archive.app.data.storage.BackupManager;
 import com.archive.app.ui.common.ItemDialogs;
 import com.archive.app.ui.common.UiKit;

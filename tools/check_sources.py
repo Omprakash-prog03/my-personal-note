@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, 'app/src/main/res')
 JAVA = os.path.join(ROOT, 'app/src/main/java')
+APP_SRC = os.path.join(ROOT, 'app/src')
 
 ANDROID_ATTR = re.compile(r'^@(android:|\*android:)')
 REF = re.compile(r'@(string|drawable|style|dimen|color|layout|menu|mipmap|xml|raw|array|integer|bool|plurals|anim|attr)/([A-Za-z0-9_.]+)')
@@ -125,6 +126,41 @@ def unbound_namespaces():
     return findings
 
 
+def broken_imports():
+    """Imports of this app's own classes must point at a class that exists.
+
+    javac rejects a stale package path, and it is invisible to syntax checking.
+    """
+    import collections
+    files = [f for f in glob.glob(os.path.join(APP_SRC, '**', '*.java'), recursive=True)]
+    defined = {}
+    nested = collections.defaultdict(set)
+    for path in files:
+        text = open(path, errors='replace').read()
+        m = re.search(r'^\s*package\s+([\w.]+)\s*;', text, re.M)
+        pkg = m.group(1) if m else ''
+        defined[pkg + '.' + os.path.basename(path)[:-5]] = path
+        nested[path] = set(re.findall(r'\b(?:class|interface|enum)\s+([A-Z]\w*)', text))
+
+    findings = []
+    for path in files:
+        text = open(path, errors='replace').read()
+        for m in re.finditer(r'^\s*import\s+(?:static\s+)?(com\.archive\.app\.[\w.]+)\s*;', text, re.M):
+            fqn = m.group(1)
+            if fqn == 'com.archive.app.R' or fqn in defined:
+                continue
+            parts = fqn.split('.')
+            ok = False
+            for cut in range(len(parts) - 1, 2, -1):
+                outer = '.'.join(parts[:cut])
+                if outer in defined:
+                    ok = parts[cut] in nested[defined[outer]]
+                    break
+            if not ok:
+                findings.append((os.path.relpath(path, ROOT), fqn))
+    return findings
+
+
 def layout_ids():
     ids = set()
     for path in glob.glob(os.path.join(RES, '**', '*.xml'), recursive=True):
@@ -226,6 +262,10 @@ def check():
           f'{len(glob.glob(os.path.join(RES, "**", "*.xml"), recursive=True))} xml files')
     for path, prefix in unbound_namespaces():
         print('ERROR: %s uses the "%s:" prefix without xmlns:%s' % (path, prefix, prefix))
+        problems += 1
+
+    for path, fqn in broken_imports():
+        print('ERROR: %s imports %s, which does not exist' % (path, fqn))
         problems += 1
 
     print('problems:', problems)
