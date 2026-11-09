@@ -244,9 +244,9 @@ public class SettingsFragment extends Fragment {
                 .setSingleChoiceItems(labels, checked, (dialog, which) -> {
                     int chosen = days[which];
                     settings.setActivityRetentionDays(chosen);
-                    app.repo().activity().setRetentionDays(chosen);
-                    app.repo().trimActivityHistory(chosen, () -> {
-                        app.repo().activityCount(count -> {
+                    NuzhatApp.get(requireContext()).repo().activity().setRetentionDays(chosen);
+                    NuzhatApp.get(requireContext()).repo().trimActivityHistory(chosen, () -> {
+                        NuzhatApp.get(requireContext()).repo().activityCount(count -> {
                             TextView historyCount = root.findViewById(R.id.value_history_count);
                             historyCount.setText(count == 0 ? getString(R.string.history_empty)
                                     : getString(R.string.history_count, count));
