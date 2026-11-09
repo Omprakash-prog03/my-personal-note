@@ -113,6 +113,8 @@ def check():
     java_files = sorted(glob.glob(os.path.join(JAVA, '**', '*.java'), recursive=True))
     test_files = sorted(glob.glob(os.path.join(ROOT, 'app/src/test/java', '**', '*.java'),
                                   recursive=True))
+    test_files += sorted(glob.glob(os.path.join(ROOT, 'app/src/androidTest/java', '**', '*.java'),
+                                    recursive=True))
     syntax_files = java_files + test_files
     if parser:
         for path in syntax_files:

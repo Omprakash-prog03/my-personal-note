@@ -17,7 +17,8 @@ compileSdk / targetSdk 35           •  minSdk 26 (Android 8.0)
 
 ```bash
 ./gradlew assembleDebug          # app/build/outputs/apk/debug/app-debug.apk
-./gradlew testDebugUnitTest      # JVM unit tests (password hashing, page geometry)
+./gradlew testDebugUnitTest      # JVM unit tests (hashing, ids, page geometry)
+./gradlew connectedDebugAndroidTest  # Room + canvas + export tests (device required)
 ./gradlew installDebug           # install on a connected device / emulator
 python3 tools/check_sources.py   # offline syntax + resource-reference check (no SDK needed)
 ```
@@ -150,7 +151,7 @@ Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on
 | Biometric / device-credential app lock | 🧪 |
 | Backup (WorkManager zip) and staged restore | 🧪 |
 | JVM unit tests (password hashing, page geometry, id generation) | ✅ |
-| Room / canvas / export instrumented tests | ⛔ (see limitations) |
+| Instrumented tests: Room persistence/cascade/transactions, canvas document, export render | 🧪 (device required) |
 | Cloud sync, accounts, subscriptions, analytics, ads | ⛔ (deliberately out of scope) |
 
 "Statically verified" means the code parses and every resource reference resolves. This sandbox has
@@ -181,7 +182,9 @@ device pass.
 2. `CanvasViewModel.save()` clears its dirty flags before the write callback, so a failed database
    write is not retried automatically (the recovery snapshot still exists, so no work is lost).
 3. Restore intentionally restarts the process; that path is untested on-device.
-4. Instrumented Room/canvas/export tests are not written yet; only JVM unit tests are present.
+4. Instrumented tests exist (`app/src/androidTest`): Room persistence, cascade delete, soft-delete
+   filtering, transactions, canvas hydration/grouping/snapshot undo, and export rendering. They need
+   a connected device or emulator (`./gradlew connectedDebugAndroidTest`) and have not been run here.
 5. Password recovery is impossible by design (local-only account). Back up before changing
    credentials.
 

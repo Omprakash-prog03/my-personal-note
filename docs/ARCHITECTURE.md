@@ -281,3 +281,18 @@ template works on A4, square and journal formats. Nothing is flattened and no st
 inserted — a template is a head start, not fake content. The objects are inserted through
 `CanvasRepository.addElements`, i.e. exactly the same path an imported image takes, so undo, autosave
 and export behave normally afterwards.
+
+## 14. Test strategy
+
+| Layer | Test | Where |
+|---|---|---|
+| Security | seeded credential verifies, tampering/malformed rejected, hex round-trip, strength rule | `app/src/test/.../PasswordHasherTest` |
+| Geometry | orientation, aspect, key/label sync, export cap expectations | `app/src/test/.../PageFormatTest` |
+| Ids | uniqueness over 2000 generations, UUID shape | `app/src/test/.../IdsTest` |
+| Database | persistence, z-order query, cascade delete, soft-delete filtering, thumbnail update, rollback on transaction failure | `app/src/androidTest/.../ArchiveDatabaseTest` |
+| Canvas | hydration + z normalisation, grouping/ungrouping, property snapshot undo, layer moves, duplicate ids | `app/src/androidTest/.../CanvasDocumentTest` |
+| Export | aspect preserved, background painted/excludable, 4096 px cap, real content pixels | `app/src/androidTest/.../PageExporterTest` |
+
+JVM tests run without a device; instrumented tests need `connectedDebugAndroidTest`. Neither was
+executed in this environment (no SDK), so passing status is unverified — the suite is written so the
+first device run gives real signal rather than smoke tests.
