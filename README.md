@@ -161,7 +161,9 @@ large binaries are never stored in SQLite.
 | Activity recorder that collapses repeats (a drag or autosave is one entry) | ✅ |
 | Timeline with Today / Yesterday / This week / Earlier grouping, search, family chips, collection filter, tap-through | ✅ |
 | Collection created / renamed / archived / trashed / cover and page created / renamed / trashed recorded from the repository | ✅ |
-| Image import, capture, object move/resize/rotate and export entries | ⛔ not wired yet — the canvas write paths and exporters still need their recorder calls |
+| Image import, camera capture, drawing/object placement entries | ✅ recorded when the element is added |
+| Object move / resize / rotate entries | ✅ one entry when the gesture completes, not per frame |
+| Page and collection export entries | ✅ recorded after the file is written |
 | Activity history preferences in Settings (retention, clear) | ⛔ not implemented |
 
 Legend: ✅ implemented (statically verified here) · 🧪 implemented, needs on-device testing ·
