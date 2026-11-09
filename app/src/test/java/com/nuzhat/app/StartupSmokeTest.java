@@ -10,6 +10,7 @@ import android.content.Intent;
 import com.nuzhat.app.data.entity.CollectionEntity;
 import com.nuzhat.app.data.entity.PageEntity;
 import com.nuzhat.app.data.preferences.AuthStore;
+import com.nuzhat.app.data.repository.NuzhatRepository;
 import com.nuzhat.app.domain.model.PageFormat;
 import com.nuzhat.app.ui.auth.LoginActivity;
 import com.nuzhat.app.ui.canvas.CanvasActivity;
@@ -48,52 +49,26 @@ public class StartupSmokeTest {
     public void collectionAndCanvasScreensOpen() throws Exception {
         new AuthStore(RuntimeEnvironment.getApplication()).signIn(true);
         NuzhatApp app = (NuzhatApp) RuntimeEnvironment.getApplication();
+        NuzhatRepository repo = NuzhatApp.self().repo();
 
+        // Use the real write path: it also proves the Activity recorder does not block the caller.
         final String[] ids = new String[2];
-        Thread writer = new Thread(() -> {
-            long now = System.currentTimeMillis();
-            CollectionEntity collection = new CollectionEntity();
-            collection.id = Ids.newId();
-            collection.name = "Smoke collection";
-            collection.description = "";
-            collection.colour = 0xFFB08968;
-            collection.icon = "folder";
-            collection.sortOrder = 0;
-            collection.createdAt = now;
-            collection.updatedAt = now;
-            app.database().collectionDao().upsert(collection);
+        final java.util.concurrent.CountDownLatch collectionLatch = new java.util.concurrent.CountDownLatch(1);
+        repo.createCollection("Smoke collection", "created by StartupSmokeTest", 0xFFB08968, "folder",
+                id -> {
+                    ids[0] = id;
+                    collectionLatch.countDown();
+                });
+        awaitWithLooper(collectionLatch);
 
-            PageEntity page = new PageEntity();
-            page.id = Ids.newId();
-            page.collectionId = collection.id;
-            page.title = "Smoke page";
-            page.formatKey = PageFormat.A4_PORTRAIT;
-            page.mode = PageFormat.MODE_PAGE;
-            page.width = PageFormat.widthOf(PageFormat.A4_PORTRAIT);
-            page.height = PageFormat.heightOf(PageFormat.A4_PORTRAIT);
-            page.createdAt = now;
-            page.updatedAt = now;
-            app.database().pageDao().upsert(page);
-
-            ids[0] = collection.id;
+        final java.util.concurrent.CountDownLatch pageLatch = new java.util.concurrent.CountDownLatch(1);
+        repo.createPage(ids[0], "Smoke page", PageFormat.A4_PORTRAIT, PageFormat.MODE_PAGE, null, page -> {
             ids[1] = page.id;
+            pageLatch.countDown();
         });
-        writer.start();
-        writer.join();
-
-        // Wait until the row is visible from a different connection. Without this the canvas can
-        // legitimately report "page missing" and finish, which would hide a real regression.
-        PageEntity persisted = null;
-        long deadline = System.currentTimeMillis() + 4000;
-        while (persisted == null && System.currentTimeMillis() < deadline) {
-            final PageEntity[] box = new PageEntity[1];
-            Thread reader = new Thread(() -> box[0] = app.database().pageDao().findSync(ids[1]));
-            reader.start();
-            reader.join();
-            persisted = box[0];
-            if (persisted == null) Thread.sleep(20);
-        }
-        assertNotNull("fixture page was never persisted", persisted);
+        awaitWithLooper(pageLatch);
+        assertNotNull("collection was not created", ids[0]);
+        assertNotNull("page was not created", ids[1]);
 
         Intent collectionIntent = new Intent(app, CollectionActivity.class)
                 .putExtra(CollectionActivity.EXTRA_COLLECTION_ID, ids[0]);
@@ -103,50 +78,31 @@ public class StartupSmokeTest {
         assertFalse("collection screen finished during creation",
                 collectionController.get().isFinishing());
 
-        // Probe the same repository path the canvas uses before blaming the activity.
-        final java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(1);
-        final com.nuzhat.app.data.repository.CanvasRepository.LoadedPage[] probe =
-                new com.nuzhat.app.data.repository.CanvasRepository.LoadedPage[1];
-        NuzhatApp.self().canvasRepo().load(ids[1], loaded -> {
-            probe[0] = loaded;
-            latch.countDown();
-        });
-        // main.post() needs the paused Robolectric looper pumped for the callback to run.
-        long latchDeadline = System.currentTimeMillis() + 5000;
-        while (latch.getCount() > 0 && System.currentTimeMillis() < latchDeadline) {
-            org.robolectric.shadows.ShadowLooper.idleMainLooper();
-            Thread.sleep(10);
-        }
-        assertEquals("repository never answered the canvas load", 0L, latch.getCount());
-        assertNotNull("canvas repository could not read the page it was given", probe[0].page);
-
         Intent canvasIntent = new Intent(app, CanvasActivity.class)
                 .putExtra(CanvasActivity.EXTRA_PAGE_ID, ids[1]);
         ActivityController<CanvasActivity> canvasController =
                 Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
-        String seenExtra = canvasController.get().getIntent() == null ? "<no intent>"
-                : String.valueOf(canvasController.get().getIntent()
-                        .getStringExtra(CanvasActivity.EXTRA_PAGE_ID));
-        String toast = org.robolectric.shadows.ShadowToast.getTextOfLatestToast();
-        boolean sameDb = NuzhatApp.self().database() == app.database();
-        boolean sameApp = canvasController.get().getApplication() == app;
-        boolean sameRepo = NuzhatApp.get(canvasController.get()).canvasRepo()
-                == NuzhatApp.self().canvasRepo();
-        assertFalse("canvas quit during creation (extra=" + seenExtra + ", id=" + ids[1]
-                        + ", toast=" + toast + ", sameDb=" + sameDb + ", sameApp=" + sameApp
-                        + ", sameRepo=" + sameRepo + ")",
-                canvasController.get().isFinishing());
+        org.robolectric.shadows.ShadowLooper.idleMainLooper();
 
-        // Let the page load resolve, then insist the canvas actually holds the document.
-        long canvasDeadline = System.currentTimeMillis() + 5000;
+        // The canvas must end up holding the page it was asked to open.
         com.nuzhat.app.canvas.engine.CanvasView canvasView =
                 canvasController.get().findViewById(R.id.canvas_view);
-        while (canvasView.document() == null && System.currentTimeMillis() < canvasDeadline) {
+        long deadline = System.currentTimeMillis() + 5000;
+        while (canvasView.document() == null && System.currentTimeMillis() < deadline) {
             org.robolectric.shadows.ShadowLooper.idleMainLooper();
             Thread.sleep(10);
         }
         assertNotNull("canvas never received its document", canvasView.document());
         assertFalse("canvas closed after loading its page", canvasController.get().isFinishing());
+    }
+
+    private static void awaitWithLooper(java.util.concurrent.CountDownLatch latch) throws Exception {
+        long deadline = System.currentTimeMillis() + 5000;
+        while (latch.getCount() > 0 && System.currentTimeMillis() < deadline) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper();
+            Thread.sleep(10);
+        }
+        assertEquals("caller callback never arrived", 0L, latch.getCount());
     }
 
     @Test
