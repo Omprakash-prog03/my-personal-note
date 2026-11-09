@@ -144,3 +144,27 @@ jobs:
           json.dump({"body": body}, open('/tmp/tests.json', 'w'))
           PY
           gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/tests.json || true
+
+      # Instrumented tests need a device, but compiling them catches real errors.
+      - name: Compile the instrumented tests
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon compileDebugAndroidTestJavaWithJavac 2>&1 | tee androidtest.log
+
+      - name: Report instrumented-test compilation on the commit
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          log = open('androidtest.log', errors='replace').read() if __import__('os').path.exists('androidtest.log') else ''
+          ok = 'BUILD SUCCESSFUL' in log
+          lines = [l for l in log.splitlines() if 'error:' in l or 'symbol:' in l]
+          body = ("Instrumented tests compile cleanly (not executed - needs a device)." if ok
+                  else "Instrumented tests FAILED TO COMPILE.\n\n```\n" + "\n".join(lines[:80])[-15000:] + "\n```")
+          json.dump({"body": body}, open('/tmp/androidtest.json', 'w'))
+          PY
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" --input /tmp/androidtest.json || true

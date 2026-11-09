@@ -26,7 +26,7 @@ compileSdk / targetSdk 35           •  minSdk 26 (Android 8.0)
 
 ```bash
 ./gradlew assembleDebug          # app/build/outputs/apk/debug/app-debug.apk
-./gradlew testDebugUnitTest          # JVM unit tests (hashing, ids, page geometry)
+./gradlew testDebugUnitTest      # JVM unit tests (hashing, ids, page geometry)
 ./gradlew connectedDebugAndroidTest  # Room + canvas + export tests (device required)
 ./gradlew installDebug           # install on a connected device / emulator
 python3 tools/check_sources.py   # offline syntax + resource-reference check (no SDK needed)
@@ -34,6 +34,20 @@ python3 tools/check_sources.py   # offline syntax + resource-reference check (no
 
 Room schemas are exported to `app/schemas/`. Never enable a destructive migration fallback: the
 archive is the user's data.
+
+### What has actually been verified
+
+| Check | Where | Result |
+|---|---|---|
+| `assembleDebug` (APK builds and is signed) | GitHub Actions, every push | ✅ passes |
+| `testDebugUnitTest` | GitHub Actions, every push | ✅ 17 tests, 3 classes, 0 failures |
+| `tools/check_sources.py` (syntax, resources, a11y) | local, no SDK needed | ✅ 0 problems |
+| `connectedDebugAndroidTest` (23 instrumented tests) | needs a device | ⏳ not run yet |
+| §26 acceptance walkthrough on hardware | manual | ⏳ not run yet |
+
+CI publishes the APK it just built to
+[the `apk-latest` release](https://github.com/Omprakash-prog03/my-personal-note/releases/tag/apk-latest),
+so the build and the download link can never drift apart.
 
 ---
 
@@ -188,15 +202,16 @@ device pass.
 
 1. **Not compiled in this environment.** No JDK/Android SDK is available; validation is a
    tree-sitter syntax pass plus full resource-reference checks (`tools/check_sources.py`, 0
-   problems across 112 Java files (7 test classes) and 117 XML files). Expect to fix ordinary compile issues on the
-   first Gradle build.
+   problems across 113 Java files and 117 XML files). The APK does build: GitHub Actions compiles it
+   and the 17 JVM unit tests pass on every push. The UI itself has never been exercised on hardware.
 2. Autosave distinguishes success from failure: a failed batch keeps the affected changes dirty,
    shows "Unable to save — Retry", and retries after two seconds. Only ids actually written (and not
    edited mid-write) are un-dirtied. This retry path is statically verified, not device-tested.
 3. Restore intentionally restarts the process; that path is untested on-device.
-4. Instrumented tests live in `app/src/androidTest` (Room persistence, cascade delete, soft-delete
-   filtering, transactions, canvas hydration/grouping/undo, image crop maths, export rendering). They
-   need a connected device (`connectedDebugAndroidTest`) and have not been run here.
+4. Instrumented tests live in `app/src/androidTest` — 23 tests over Room persistence, cascade delete,
+   soft-delete filtering, transactions, canvas hydration/grouping/undo, image crop maths and export
+   rendering. CI compiles them (`compileDebugAndroidTestJavaWithJavac`) so they stay syntactically
+   valid, but they only *run* on a device via `connectedDebugAndroidTest`, which has not happened.
 5. Password recovery is impossible by design (local-only account). Back up before changing
    credentials.
 
