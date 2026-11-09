@@ -128,9 +128,13 @@ public class StartupSmokeTest {
                 : String.valueOf(canvasController.get().getIntent()
                         .getStringExtra(CanvasActivity.EXTRA_PAGE_ID));
         String toast = org.robolectric.shadows.ShadowToast.getTextOfLatestToast();
-        assertFalse("canvas quit during creation (extra seen=" + seenExtra
-                        + ", page id=" + ids[1] + ", toast=" + toast
-                        + ", sameDb=" + (NuzhatApp.self().database() == app.database()) + ")",
+        boolean sameDb = NuzhatApp.self().database() == app.database();
+        boolean sameApp = canvasController.get().getApplication() == app;
+        boolean sameRepo = NuzhatApp.get(canvasController.get()).canvasRepo()
+                == NuzhatApp.self().canvasRepo();
+        assertFalse("canvas quit during creation (extra=" + seenExtra + ", id=" + ids[1]
+                        + ", toast=" + toast + ", sameDb=" + sameDb + ", sameApp=" + sameApp
+                        + ", sameRepo=" + sameRepo + ")",
                 canvasController.get().isFinishing());
 
         // Let the page load resolve, then insist the canvas actually holds the document.
