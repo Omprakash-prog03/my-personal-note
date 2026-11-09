@@ -65,8 +65,23 @@ public class CanvasViewModel extends AndroidViewModel {
     public void load(final String pageId) {
         if (loaded) return;
         loaded = true;
+        loadAttempt(pageId, 0);
+    }
+
+    /**
+     * One retry before declaring a page missing: the first read can land on a connection that has
+     * not yet seen a page written moments earlier (fresh page, restored database, slow storage).
+     * Losing the user back to the collection screen for a transient miss is worse than one extra
+     * query.
+     */
+    private void loadAttempt(final String pageId, final int attempt) {
         repo.load(pageId, loadedPage -> {
             if (loadedPage.page == null) {
+                if (attempt < 1) {
+                    loadAttempt(pageId, attempt + 1);
+                    return;
+                }
+                android.util.Log.w("CanvasViewModel", "page not found after retry: " + pageId);
                 pageMissing.setValue(true);
                 return;
             }
