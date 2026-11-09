@@ -35,6 +35,23 @@ public class StartupSmokeTest {
     }
 
     @Test
+    public void everyTabInflates() {
+        new AuthStore(RuntimeEnvironment.getApplication()).signIn(true);
+
+        ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup();
+        MainActivity activity = controller.get();
+        com.google.android.material.bottomnavigation.BottomNavigationView nav =
+                activity.findViewById(R.id.bottom_nav);
+        assertNotNull(nav);
+        // Home, Search, Library and Settings are all added lazily; each one inflates its own layout.
+        for (int tabId : new int[]{R.id.tab_home, R.id.tab_search, R.id.tab_library, R.id.tab_settings}) {
+            nav.setSelectedItemId(tabId);
+            org.robolectric.shadows.ShadowLooper.idleMainLooper();
+            assertFalse("activity finished while showing tab " + tabId, activity.isFinishing());
+        }
+    }
+
+    @Test
     public void mainScreenStartsAfterSignIn() {
         new AuthStore(RuntimeEnvironment.getApplication()).signIn(true);
 
