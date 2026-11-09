@@ -80,7 +80,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RowHolder rowHolder = (RowHolder) holder;
         ActivityEntity activity = row.activity;
         rowHolder.text.setText(activity.description);
-        rowHolder.meta.setText(DateFormats.time(activity.timestamp));
+        rowHolder.meta.setText(DateFormats.clockTime(activity.timestamp));
         rowHolder.icon.setImageResource(iconFor(activity.actionType));
         rowHolder.itemView.setOnClickListener(v -> onClick.accept(activity));
         rowHolder.itemView.setClickable(activity.collectionId != null || activity.pageId != null);

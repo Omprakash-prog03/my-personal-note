@@ -79,7 +79,19 @@ public class StartupSmokeTest {
         writer.start();
         writer.join();
 
-        // Room refuses main-thread writes, so the fixture is written on its own thread above.
+        // Wait until the row is visible from a different connection. Without this the canvas can
+        // legitimately report "page missing" and finish, which would hide a real regression.
+        PageEntity persisted = null;
+        long deadline = System.currentTimeMillis() + 4000;
+        while (persisted == null && System.currentTimeMillis() < deadline) {
+            final PageEntity[] box = new PageEntity[1];
+            Thread reader = new Thread(() -> box[0] = app.database().pageDao().findSync(ids[1]));
+            reader.start();
+            reader.join();
+            persisted = box[0];
+            if (persisted == null) Thread.sleep(20);
+        }
+        assertNotNull("fixture page was never persisted", persisted);
 
         Intent collectionIntent = new Intent(app, CollectionActivity.class)
                 .putExtra(CollectionActivity.EXTRA_COLLECTION_ID, ids[0]);
@@ -94,7 +106,8 @@ public class StartupSmokeTest {
         ActivityController<CanvasActivity> canvasController =
                 Robolectric.buildActivity(CanvasActivity.class, canvasIntent).setup();
         org.robolectric.shadows.ShadowLooper.idleMainLooper();
-        assertFalse("canvas screen finished during creation", canvasController.get().isFinishing());
+        assertFalse("canvas finished even though its page exists",
+                canvasController.get().isFinishing());
     }
 
     @Test

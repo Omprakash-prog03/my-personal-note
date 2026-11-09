@@ -22,6 +22,17 @@ public final class DateFormats {
         return new SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(new Date(millis));
     }
 
+    /** Header line on Home: “Sunday · 9 November 2026”. */
+    public static String fullDate() {
+        return new SimpleDateFormat("EEEE \u00b7 d MMMM yyyy", Locale.getDefault())
+                .format(new Date());
+    }
+
+    /** Timeline clock time: “5:42 PM”. */
+    public static String clockTime(long millis) {
+        return new SimpleDateFormat("h:mm a", Locale.getDefault()).format(new Date(millis));
+    }
+
     public static String time(long millis) {
         return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(millis));
     }

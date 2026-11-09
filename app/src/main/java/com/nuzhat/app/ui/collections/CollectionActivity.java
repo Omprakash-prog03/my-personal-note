@@ -14,9 +14,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.nuzhat.app.R;
 import com.nuzhat.app.utils.PickerRequest;
@@ -53,7 +53,8 @@ public class CollectionActivity extends BaseActivity {
     private MaterialToolbar toolbar;
     private TextView description;
     private View emptyState;
-    private RecyclerView recycler;
+    private View recycler;
+    private ViewPager2 pager;
     private final PageAdapter adapter = new PageAdapter();
     private ActivityResultLauncher<PickVisualMediaRequest> coverPicker;
 
@@ -70,15 +71,17 @@ public class CollectionActivity extends BaseActivity {
         toolbar = findViewById(R.id.toolbar);
         description = findViewById(R.id.collection_description);
         emptyState = findViewById(R.id.empty_state);
-        recycler = findViewById(R.id.pages_recycler);
+        recycler = findViewById(R.id.pages_pager);
+        pager = (ViewPager2) recycler;
         ExtendedFloatingActionButton fab = findViewById(R.id.fab_add_page);
 
         toolbar.setNavigationOnClickListener(v -> finish());
         toolbar.inflateMenu(R.menu.menu_collection);
         toolbar.setOnMenuItemClickListener(this::onMenuItem);
 
-        recycler.setLayoutManager(new GridLayoutManager(this, 2));
-        recycler.setAdapter(adapter);
+        pager.setOffscreenPageLimit(3);
+        pager.setAdapter(adapter);
+        pager.setPageTransformer(new FanPageTransformer());
         adapter.listener = this::onPageLongPress;
 
         emptyState.findViewById(R.id.empty_title).setVisibility(View.GONE);
@@ -333,6 +336,25 @@ public class CollectionActivity extends BaseActivity {
 
     // ------------------------------------------------------------------ adapter
 
+    /**
+     * Layered deck: the active page sits square in front while its neighbours tilt away and fall
+     * back, which is what makes the collection read as a physical scrapbook instead of a grid.
+     */
+    private static class FanPageTransformer implements ViewPager2.PageTransformer {
+        @Override
+        public void transformPage(@NonNull View page, float position) {
+            float distance = Math.min(1f, Math.abs(position));
+            page.setTranslationX(-page.getWidth() * position * 0.34f);
+            page.setPivotY(page.getHeight() * 0.5f);
+            page.setPivotX(position < 0 ? page.getWidth() : 0f);
+            page.setRotationY(position * -9f);
+            float scale = 1f - 0.16f * distance;
+            page.setScaleX(scale);
+            page.setScaleY(scale);
+            page.setAlpha(1f - 0.35f * distance);
+        }
+    }
+
     private class PageAdapter extends RecyclerView.Adapter<PageAdapter.Holder> {
 
         private final List<PageEntity> items = new ArrayList<>();
@@ -347,7 +369,8 @@ public class CollectionActivity extends BaseActivity {
         @NonNull
         @Override
         public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_page_carousel, parent, false);
             return new Holder(view);
         }
 
@@ -355,8 +378,10 @@ public class CollectionActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull Holder holder, int position) {
             PageEntity page = items.get(position);
             holder.title.setText(page.title);
-            holder.meta.setText(DateFormats.relative(page.updatedAt));
-            holder.badge.setText(PageFormat.labelOf(page.formatKey));
+            holder.meta.setText(PageFormat.labelOf(page.formatKey) + " \u00b7 " + DateFormats.relative(page.updatedAt));
+            if (holder.badge != null) {
+                holder.badge.setText(String.format(java.util.Locale.US, "PAGE %02d", position + 1));
+            }
             if (page.thumbnailPath != null) {
                 holder.thumb.setVisibility(View.VISIBLE);
                 ThumbnailLoader.loadMedia(holder.thumb, page.thumbnailPath, 480, 640);
@@ -383,7 +408,7 @@ public class CollectionActivity extends BaseActivity {
                 super(view);
                 title = view.findViewById(R.id.page_title);
                 meta = view.findViewById(R.id.page_meta);
-                badge = view.findViewById(R.id.page_format_badge);
+                badge = view.findViewById(R.id.page_number);
                 thumb = view.findViewById(R.id.page_thumb);
             }
         }

@@ -35,6 +35,15 @@
                 android:textColor="?attr/nuzhatMuted" />
 
             <TextView
+                android:id="@+id/home_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:letterSpacing="0.08"
+                android:textAppearance="@style/TextAppearance.Nuzhat.Label"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
                 android:id="@+id/greeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -184,12 +193,14 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/collections_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="290dp"
+                    android:layout_marginTop="12dp"
+                    android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
                     android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2" />
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             </LinearLayout>
 
             <!-- Journal -->

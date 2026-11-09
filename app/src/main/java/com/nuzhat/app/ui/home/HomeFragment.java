@@ -36,6 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The archive dashboard: greeting, search, pinned collections, recent pages, collections, latest
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment {
     private final NuzhatRepository repo = NuzhatApp.self().repo();
 
     private final CollectionAdapter pinnedAdapter = new CollectionAdapter(true);
-    private final CollectionAdapter collectionsAdapter = new CollectionAdapter(false);
+    private final ChapterAdapter chapterAdapter = new ChapterAdapter();
     private final PageAdapter pageAdapter = new PageAdapter();
     private final MediaAdapter mediaAdapter = new MediaAdapter();
 
@@ -72,6 +73,7 @@ public class HomeFragment extends Fragment {
                 : DateFormats.greeting().equals("evening") ? R.string.greeting_evening
                 : R.string.greeting_night;
         ((TextView) root.findViewById(R.id.greeting)).setText(greeting);
+        ((TextView) root.findViewById(R.id.home_date)).setText(DateFormats.fullDate());
 
         root.findViewById(R.id.search_bar).setOnClickListener(v -> host.openSearch());
 
@@ -84,7 +86,8 @@ public class HomeFragment extends Fragment {
         pages.setAdapter(pageAdapter);
 
         RecyclerView collections = root.findViewById(R.id.collections_recycler);
-        collections.setAdapter(collectionsAdapter);
+        collections.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        collections.setAdapter(chapterAdapter);
 
         RecyclerView media = root.findViewById(R.id.media_recycler);
         media.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -122,7 +125,7 @@ public class HomeFragment extends Fragment {
         repo.collections().observe(getViewLifecycleOwner(), collectionsList -> {
             List<CollectionDao.CollectionWithCount> list = collectionsList == null
                     ? new ArrayList<>() : collectionsList;
-            collectionsAdapter.submit(list);
+            chapterAdapter.submit(list);
             root.findViewById(R.id.section_collections).setVisibility(list.isEmpty() ? View.GONE : View.VISIBLE);
         });
 
@@ -206,6 +209,73 @@ public class HomeFragment extends Fragment {
 
         class Holder extends RecyclerView.ViewHolder {
             Holder(View itemView) { super(itemView); }
+        }
+    }
+
+    /**
+     * Editorial chapter rail: tall cover cards with a chapter number, like the plates of an
+     * illustrated book. Covers are loaded lazily through the repository's cached media lookup.
+     */
+    private class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.Holder> {
+
+        private final List<CollectionDao.CollectionWithCount> items = new ArrayList<>();
+
+        void submit(List<CollectionDao.CollectionWithCount> list) {
+            items.clear();
+            items.addAll(list);
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new Holder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_chapter, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull Holder holder, int position) {
+            CollectionDao.CollectionWithCount item = items.get(position);
+            CollectionEntity collection = item.collection;
+            holder.number.setText(String.format(Locale.US, "CHAPTER %02d", position + 1));
+            holder.title.setText(collection.name);
+            holder.description.setText(collection.description == null || collection.description.isEmpty()
+                    ? collection.category : collection.description);
+            holder.meta.setText(item.pageCount == 1 ? "1 page" : item.pageCount + " pages");
+            holder.cover.setImageDrawable(null);
+            holder.cover.setBackgroundColor(collection.colour);
+            if (collection.coverMediaId != null) {
+                repo.mediaOnce(collection.coverMediaId, media -> {
+                    if (media != null && media.relativePath != null) {
+                        ThumbnailLoader.loadMedia(holder.cover, media.relativePath, 480, 960);
+                    }
+                });
+            }
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(requireActivity(), CollectionActivity.class);
+                intent.putExtra(CollectionActivity.EXTRA_COLLECTION_ID, collection.id);
+                startActivity(intent);
+            });
+        }
+
+        @Override
+        public int getItemCount() { return items.size(); }
+
+        class Holder extends RecyclerView.ViewHolder {
+            final ImageView cover;
+            final TextView number;
+            final TextView title;
+            final TextView description;
+            final TextView meta;
+
+            Holder(View itemView) {
+                super(itemView);
+                cover = itemView.findViewById(R.id.chapter_cover);
+                number = itemView.findViewById(R.id.chapter_number);
+                title = itemView.findViewById(R.id.chapter_title);
+                description = itemView.findViewById(R.id.chapter_description);
+                meta = itemView.findViewById(R.id.chapter_meta);
+            }
         }
     }
 
